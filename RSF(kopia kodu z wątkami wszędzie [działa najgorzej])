@@ -1,0 +1,268 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace RSF
+{
+    public partial class RSF : Form
+    {
+        List<Images> repeatedImages = new List<Images>();
+        bool repetings = false;
+
+        //COMPARING FOR IMAGES ONLY
+        void comparing(Images image,int index)
+        {
+            if (imagesList.Count == 0)
+            {
+                //imagesList.Add(image);
+            }
+            else {
+                int j = imagesList.Count - 1;
+                //if (j == 0) j = 1;
+                for (; j >= 0; j--) //repeat dodaje 10 sec do roboty na fate ale znalazł 2 więcej pliki
+                {
+                    if(j != index) { 
+                        //Console.Write(imagesList[j].imageHash);
+                        int comparability = 0;
+                        for (int i = j+1; i < accuracy * accuracy; i++) //FATE w 3 min z 2 parell forami //TODO dodać to j+1 do noramlnego kodu i porównać na tym powtórzenia (na 2 parrel nie ma powtórzeń [pomyśleć czemu])
+                        {
+                            //image.imageHash[i] == imagesList[j].imageHash[i] //FATE w 1:05  //EDIT FATE w 45 sek(z parell.for (30% przyśpieszenia)
+                            //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
+                            if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań
+                        }  //re:zero 40 min i nie skończył
+                        //Parallel.For(0, max, i =>
+                        //{
+                        //    //image.imageHash[i] == imagesList[j].imageHash[i] //TODO FATE w 1:05
+                        //    //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
+                        //    if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań // 78,086
+                        //}); //TODO zprawdzić czy for i parell for dają takie same rezultaty (powtarzające się obrazy)
+                        comparability = (comparability / (accuracy * accuracy)) * 100;
+                        Console.WriteLine(comparability);
+                        if (comparability > 90)
+                        {
+                            if (repetings == false)
+                            {
+                                repetings = true;
+                            }
+                            imagesList[index].repeatedWith = imagesList[j].filename + imagesList[j].extension;
+                            //imagesList.Add(image);
+                        }
+                    }
+                }
+                //imagesList.Add(image);
+
+                //int j = imagesList.Count - 1;
+                //Parallel.For(0, j, k => //ZERO PRZYŚPIESZENIA IDK W 6 MIN NA OBU METODACH
+                //{
+                //   int comparability = 0;
+                //   for (int i = 0; i < accuracy * accuracy; i++)
+                //   {
+                //        if (image.imageHash[i] == imagesList[k].imageHash[i]) comparability++;
+                //   }
+                //   comparability = (comparability / (accuracy * accuracy)) * 100;
+                //   Console.WriteLine(comparability);
+                //   if (comparability > 90)
+                //   {
+                //       if (repetings == false)
+                //       {
+                //           repetings = true;
+                //       }
+                //       image.repeatedWith = imagesList[k].filename + imagesList[k].extension;
+                //       imagesList.Add(image);
+                //   }
+                //});
+                //if (repetings == false)
+                //{
+                //    imagesList.Add(image);
+                //}
+            }
+        }
+
+        List<Images> imagesList = new List<Images>();
+        int accuracy = 32;
+
+        //GETTING VALUES OF LIGHT AND DARK (FOR IMAGE COMPARING)
+        public bool[] imageHashing(Images image)
+        {
+            bool[] b= new bool[accuracy * accuracy];
+            Image bitmapTemp = Image.FromFile(image.path);
+            Bitmap bitmap = new Bitmap(bitmapTemp, new Size(accuracy, accuracy));
+            bitmapTemp.Dispose();
+            int k = 0;
+            for(int i = 0; i < bitmap.Height; i++)
+            {
+                for(int j = 0; j < bitmap.Width; j++)
+                {
+                    b[k]=(bitmap.GetPixel(i, j).GetBrightness() < 0.5f);
+                    k++;
+                }
+            }
+            return b;
+        }
+
+        //GETING FILE HASH (FOR EASY FILE COMPARING)
+        public string Hash(string element)
+        {
+            var md5 = System.Security.Cryptography.MD5.Create();
+            int size = 10000;
+            byte[] streamByte = new byte[size];
+            FileStream fs = File.OpenRead(element);
+            fs.Read(streamByte, 0, size); //streamByte.Length
+            var hash = md5.ComputeHash(streamByte);
+            var hashFinal = BitConverter.ToString(hash).Replace("-", "").ToLower();
+            return hashFinal;
+        }
+
+        //CLENING GLOBAL VARIABLES FOR SECOND RUN
+        public void cleaningVariables()
+        {
+            imagesList.Clear();
+            repeatedImages.Clear();
+            repetings = false;
+        }
+
+        public RSF()
+        {
+            InitializeComponent();
+        }
+
+        private void start_Click(object sender, EventArgs e)
+        {
+            //Debug.("Test");
+            //CLENING GLOBAL VARIABLES FOR SECOND RUN
+            cleaningVariables();
+
+            //TRYING TO GET FILES FROM USER SPECIFIED DIRECTORY
+            bool error = false;
+            Array dir;
+
+            try
+            {
+                Directory.GetFiles(textBoxDirectory.Text, "*.*", SearchOption.AllDirectories);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ArgumentException) MessageBox.Show("Nie podałeś ścieżki do folderu", "Error",
+    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ex is IOException) MessageBox.Show("Podana scieżka jest nie prawidłowa", "Error",
+    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                error = true;
+            }
+
+            if (error == false)
+            {
+                logBox.Text += "Images:" + Environment.NewLine;
+                dir = Directory.GetFiles(textBoxDirectory.Text, "*.*", SearchOption.AllDirectories);
+                Console.WriteLine("Number of elements: " + dir.GetLength(0));
+                //int max = dir.GetLength(0); //1:13 FATE
+                //Parallel.For(0, max, i => //TODO  Zrobić na Parell(DAJE RÓZNE WYNIKI ZA KAŻDYM RAZEM)
+                //{
+                //    //GETTING FILES FROM DIRECTORY AND CHECKING THEIR EXTENSIONS
+                //    var element = dir.GetValue(i).ToString();
+                //    var extension = Path.GetExtension(element).ToLower();
+                //    var filename = Path.GetFileName(element);
+                //    filename = filename.Remove(filename.Length - extension.Length, extension.Length);
+                //    if (extension == ".jpg" | extension == ".png" | extension == ".gif" | extension == ".jpeg")
+                //    {
+                //        //CREATING IMAGES LIST
+                //        long size = new FileInfo(element).Length;
+                //        Images image = new Images(filename, extension, element, Hash(element));
+                //        //logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; })); //Powoduje System,OjectDisposedExeption
+                //        //logBox.Text += "- " + filename + extension + " " + Environment.NewLine;
+                //        image.imageHash = imageHashing(image);
+                //        comparing(image); //TODO zrobić dzielenie listy plików na 2 i sprawdzanie ich na różnych wątkach
+                //        //TODO Zrobić pokazanie który plik jest większy
+                //    }
+                //}); //TODO Przemyśleć cashowanie wyników (tylko obrazów? obrazów do obrazów?)
+                for (int i = 0; i < dir.GetLength(0); i++)
+                {
+                    var element = dir.GetValue(i).ToString();
+                    var extension = Path.GetExtension(element).ToLower();
+                    var filename = Path.GetFileName(element);
+                    filename = filename.Remove(filename.Length - extension.Length, extension.Length);
+                    //Debug.WriteLine(extension);
+                    if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg")
+                    {
+                        //Creaing image list
+                        Images image = new Images(filename, extension, element, "0"); //Images image = new Images(filename, extension, element, Hash(element));
+                        logBox.Text += "- " + filename + extension + " " + Environment.NewLine;
+                        imagesList.Add(image);
+
+                        //bool comparingResault = await Task.Run(() => comparing(image)); //TODO Użyć Task.WhenAll żeby sprawdzić czy porównywanie zostało już zakończone
+                        //if (comparingResault) imagesList.Add(image);
+                        //TODO Zrobić pokazanie który plik jest większy
+                    }
+                }
+
+                //WRITING ALL FILES ON SCREEN
+                //for (int i = 0; i < imagesList.Count - 1; i++)
+                //{
+                //    logBox.Text += imagesList[i].filename + imagesList[i].extension + Environment.NewLine;
+                //}
+                imagesList.OrderBy(x => x.filename).ToList(); //TODO Sprawdzić czy sortowanie listy przyśpieszy porównwanie (raczej nie bo zczytuje pliki po nazwie)
+                int imageListLength = imagesList.Count; 
+                Parallel.For(0,imageListLength, i =>
+                {
+                    imagesList[i].imageHash = imageHashing(imagesList[i]);
+                });
+
+                Parallel.For(0, imageListLength, i =>
+                {
+                    comparing(imagesList[i], i);
+                    //Console.WriteLine("Next Element");
+                });
+
+                //DISPLAING REAPATED FILES
+                if (repetings == true)
+                {
+                    logBox.Text += Environment.NewLine + "Repeating elements:" + Environment.NewLine + Environment.NewLine;
+                    for (int i = 0; i < imagesList.Count; i++)
+                    {
+                        //Console.WriteLine(imagesList[i].repeatedWith);
+                        if (imagesList[i].repeatedWith != null)
+                        {
+                            logBox.Text += imagesList[i].filename + imagesList[i].extension + " -> " + imagesList[i].repeatedWith + Environment.NewLine;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void stop_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+    public class Images
+    {
+        public string filename;
+        public string extension;
+        public string path;
+        public string hash;
+        public bool[] imageHash;
+        public string repeatedWith;
+
+        public Images(string _filename, string _extension,string _path, string _hash)
+        {
+            filename = _filename;
+            extension = _extension;
+            path = _path;
+            hash = _hash;
+        }
+
+        public Images(bool[] _imageHash)
+        {
+            imageHash = _imageHash;
+        }
+
+        public Images(string _repeatedWith)
+        {
+            repeatedWith = _repeatedWith;
+        }
+    }
+}
