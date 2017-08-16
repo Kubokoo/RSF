@@ -36,8 +36,6 @@ namespace RSF
                 return true; //its PNG image
             }
 
-            //Console.WriteLine(streamByte.ToString());
-
             return false;
         }
 
@@ -407,8 +405,14 @@ namespace RSF
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
                 logBox.Font = normal;
 
-                bool lj = true;
-                ////TODO osobna funkcja jeśli imagelist z pliku(sprawdzenie czy nie ma nowych plików w folderze i porównywanie)
+                //Checking if json file is 0 bytes
+                long length = new FileInfo("Json/" + folderName + ".json").Length;
+                if (length == 0)
+                {
+                    File.Delete("Json/" + folderName + ".json");
+                }
+
+                bool lj = true;  //TODO usunać jak skończę działać nad json
                 if (LoadingJson(folderName) && lj)
                 {
                     try
