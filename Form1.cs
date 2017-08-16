@@ -47,7 +47,15 @@ namespace RSF
             {
                 var reader = File.ReadAllBytes("Json/" + folderName + ".json");
                 string result = System.Text.Encoding.UTF8.GetString(reader);
-                imagesList = JsonConvert.DeserializeObject<List<Images>>(result); //TODO sprawidć jak się zachowa przy zepsutym,pustym json
+                try
+                {
+                    JsonConvert.DeserializeObject<List<Images>>(result);
+                }
+                catch(Exception)
+                {
+                    return false;
+                }
+                imagesList = JsonConvert.DeserializeObject<List<Images>>(result);
                 if (imagesList.Count != 0) return true;
                 else return false;
             }
@@ -211,11 +219,9 @@ namespace RSF
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
                             //image.imageHash[i] == imagesList[j].imageHash[i]
-                            //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
-                            if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań
+                            //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i]
                         }
                         comparability = (comparability / (accuracy * accuracy)) * 100;
-                        //Console.WriteLine(comparability); STRASZNIE SPOWANLNIAWYKONYWANIE KODU 17 sek bez - 1:17 z wypisywaniem //REZERO w 2:24 //IDK w 2 min
                         if (comparability > 90)
                         {
                             if (repetings == false)
@@ -228,7 +234,7 @@ namespace RSF
                         }
                     }
 
-                    if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList) imagesList.Add(image); //TODO != nie dodaje do list == dodaje też te co juz były wczytane
+                    if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList) imagesList.Add(image);
                     return false;
                 }
                 return true;
