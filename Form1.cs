@@ -21,9 +21,16 @@ namespace RSF
                 return true; //its JPG image
             }
 
-            if (streamByte[0] == 47 && streamByte[1] == 49
-                && streamByte[2] == 46 && streamByte[3] == 38
-                && (streamByte[4] == 37 || streamByte[4] == 39) && streamByte[5] == 61)
+            //if (streamByte[0] == 47 && streamByte[1] == 49
+            //    && streamByte[2] == 46 && streamByte[3] == 38
+            //    && (streamByte[4] == 37 || streamByte[4] == 39) && streamByte[5] == 61)
+            //{
+            //    return true; //its GIF image
+            //}
+
+            if (streamByte[0] == 71 && streamByte[1] == 73
+                && streamByte[2] == 70 && streamByte[3] == 56
+                && (streamByte[4] == 57 || streamByte[4] == 55) && streamByte[5] == 97)
             {
                 return true; //its GIF image
             }
