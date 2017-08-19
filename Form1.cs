@@ -41,9 +41,9 @@ namespace RSF
 
         //TODO przemyśleć jak zrobić buforowanie następnej bitmapy
 
-        bool LoadingJson(string folderName)
+        bool LoadingJson(string folderName, bool lj)
         {
-            if (File.Exists("Json/" + folderName + ".json"))
+            if (File.Exists("Json/" + folderName + ".json") && lj)
             {
                 var reader = File.ReadAllBytes("Json/" + folderName + ".json");
                 string result = System.Text.Encoding.UTF8.GetString(reader);
@@ -218,6 +218,7 @@ namespace RSF
                         int comparability = 0;
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
+                            if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;
                             //image.imageHash[i] == imagesList[j].imageHash[i]
                             //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i]
                         }
@@ -234,7 +235,10 @@ namespace RSF
                         }
                     }
 
-                    if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList) imagesList.Add(image);
+                    if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList)
+                    {
+                        imagesList.Add(image);
+                    }
                     return false;
                 }
                 return true;
@@ -359,10 +363,16 @@ namespace RSF
             InitializeComponent();
         }
 
-        bool logfile = true;
+        bool jsonSaving = true;
 
         Font bolded = new Font("Georgia", 14, FontStyle.Bold);
         Font normal = new Font("Georgia", 14, FontStyle.Regular);
+
+        //private void Rchtxt_TextChanged(object sender, EventArgs e)
+        //{
+        //    this.CheckKeyword("while", Color.Purple, 0);
+        //    this.CheckKeyword("if", Color.Green, 0);
+        //}
 
 
         private async void start_Click(object sender, EventArgs e)
@@ -401,25 +411,30 @@ namespace RSF
                 //logBox.SelectionFont = new Font("Arial", 100,FontStyle.Bold);
                 //logBox.SelectedText = "Apples" + "\n";
 
-                //logBox.Font = bolded; //TODO poza ifem działa, w nim już nie (prawdopodobnie działa tylko na 1 tekst a potem się nie zmienia)
-                //logBox.Text += "Test";
+                //logBox.Font = bolded; 
+                //logBox.Document.Blocks.Add(new Paragraph(new Run("Text")));
+                //logBox.AppendText("QERTXZDASRQWDSAASDADSASDASDEQ");
+                //TODO (prawdopodobnie działa tylko na 1 tekst a potem się nie zmienia), pokombinować z pragrafami i ich zanaczaniem
 
                 dir = Directory.GetFiles(textBoxDirectory.Text, "*.*", SearchOption.AllDirectories);
                 progressBar1.Maximum = dir.Length + 1;
 
-                logBox.Font = bolded;
+                
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
-                logBox.Font = normal;
+                //logBox.Font = normal;
 
                 //Checking if json file is 0 bytes
-                long length = new FileInfo("Json/" + folderName + ".json").Length;
-                if (length == 0)
+                if(File.Exists("Json/" + folderName + ".json"))
                 {
-                    File.Delete("Json/" + folderName + ".json");
+                    long length = new FileInfo("Json/" + folderName + ".json").Length;
+                    if (length == 0)
+                    {
+                        File.Delete("Json/" + folderName + ".json");
+                    }
                 }
 
                 bool lj = true;  //TODO usunać jak skończę działać nad json
-                if (LoadingJson(folderName) && lj)
+                if (LoadingJson(folderName, lj))
                 {
                     try
                     {
@@ -467,12 +482,12 @@ namespace RSF
 
                 File.WriteAllText("log.txt", logBox.Text);
 
-                if (logfile)
+                if (jsonSaving)
                 {
 
                     if (Directory.Exists("Json"))
                     {
-                        File.Delete("Json/" + folderName + ".json");
+                        File.Delete("Json/" + folderName + ".json"); //TODO Add checikng if all files form iamgelist exosts (only on readed from json)
                         File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.Indented));
                     }
                     else
