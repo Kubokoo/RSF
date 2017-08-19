@@ -16,45 +16,99 @@ namespace RSF
             FileStream fs = File.OpenRead(element);
             fs.Read(streamByte, 0, 8); //TODO zrobić na array i for(może)
 
-            if(streamByte[0] == 255 && streamByte[1] == 216 && streamByte[2] == 255)
+            if (streamByte[0] == 255 && streamByte[1] == 216 && streamByte[2] == 255)
             {
                 return true; //its JPG image
             }
 
-            if(streamByte[0] == 47 && streamByte[1] == 49
+            if (streamByte[0] == 47 && streamByte[1] == 49
                 && streamByte[2] == 46 && streamByte[3] == 38
                 && (streamByte[4] == 37 || streamByte[4] == 39) && streamByte[5] == 61)
             {
                 return true; //its GIF image
             }
 
-            if(streamByte[0]== 137 && streamByte[1] == 80 
+            if (streamByte[0] == 137 && streamByte[1] == 80
                 && streamByte[2] == 78 && streamByte[3] == 71
-                && streamByte[4] == 13 && streamByte[5] == 10 
+                && streamByte[4] == 13 && streamByte[5] == 10
                 && streamByte[6] == 26 && streamByte[7] == 10)
             {
                 return true; //its PNG image
             }
 
-            //Console.WriteLine(streamByte.ToString());
-
             return false;
         }
-        
+
         //TODO przemyśleć jak zrobić buforowanie następnej bitmapy
 
-       bool LoadingJson(string folderName)
-       {
-           if (File.Exists("../../" + folderName + ".json"))
-           {
-               var reader = File.ReadAllBytes("../../" + folderName + ".json");
-               string result = System.Text.Encoding.UTF8.GetString(reader);
-               imagesList = JsonConvert.DeserializeObject<List<Images>>(result);
-               if (imagesList.Count != 0) return true;
-               else return false;
-           }
-           return false;
-       }        
+        bool LoadingJson(string folderName, bool lj)
+        {
+            if (File.Exists("Json/" + folderName + ".json") && lj)
+            {
+                var reader = File.ReadAllBytes("Json/" + folderName + ".json");
+                string result = System.Text.Encoding.UTF8.GetString(reader);
+                try
+                {
+                    JsonConvert.DeserializeObject<List<Images>>(result);
+                }
+                catch(Exception)
+                {
+                    return false;
+                }
+                imagesList = JsonConvert.DeserializeObject<List<Images>>(result);
+                if (imagesList.Count != 0) return true;
+                else return false;
+            }
+            return false;
+        }
+
+        void SearchingForFilesWithJson(Array dir)
+        {
+            logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "Images: " + Environment.NewLine; }));
+            for (int i = 0; i < dir.GetLength(0); i++)
+            {
+                var element = dir.GetValue(i).ToString();
+                var extension = Path.GetExtension(element).ToLower();
+                var filename = Path.GetFileName(element);
+                filename = filename.Remove(filename.Length - extension.Length, extension.Length);
+                if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg")
+                {
+
+                    //Checking if file is 0 Bytes
+                    long length = new FileInfo(element).Length;
+                    if (length == 0)
+                    {
+                        File.Delete(element);
+                        continue;
+                    }
+
+                    if (CheckingIfIsImage(element))
+                    {
+                        if (imagesList.FindIndex(x => x.path.Contains(element)) != -1)
+                        {
+                            logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
+                            int indexOnImageList = imagesList.FindIndex(x => x.path.Contains(element));
+                            comparing(imagesList[indexOnImageList], indexOnImageList);
+                        }
+                        else
+                        {
+                            Images image = new Images(filename, extension, element, (int)length, Hash(element), false);
+                            logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
+                            image.imageHash = imageHashing(image.path);
+                            comparing(image, -2);
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("This element wants to be image but it isn't: " + element);
+                    }
+
+                }
+                progressBar1.Invoke(new MethodInvoker(delegate { progressBar1.Value++; }));
+
+            }
+        }
 
         void SearchingForFiles(Array dir)
         {
@@ -84,7 +138,7 @@ namespace RSF
                         Images image = new Images(filename, extension, element, (int)length, Hash(element), false); //Images image = new Images(filename, extension, element, Hash(element));
                         logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
                         image.imageHash = imageHashing(image.path);
-                        comparing(image);
+                        comparing(image, -2);
                     }
                     else
                     {
@@ -94,7 +148,7 @@ namespace RSF
                     //TODO Zrobić pokazanie który plik jest większy
                 }
                 progressBar1.Invoke(new MethodInvoker(delegate { progressBar1.Value++; }));
-                
+
             }
         } //TODO Dodać wczytywanie listy komend z pliku(wykorzystać 2 przycisk)
 
@@ -103,7 +157,7 @@ namespace RSF
         bool repetings = false;
 
         //COMPARING FOR IMAGES ONLY
-        bool comparing(Images image)
+        bool comparing(Images image, int indexOnImageList)
         {
             bool breakLoop = false;
             if (imagesList.Count == 0)
@@ -113,15 +167,19 @@ namespace RSF
             }
             else
             {
-                if(imagesList.Count > 100)
+                int count = imagesList.Count;
+                if (imagesList.Count > 100)
                 {
-                    Parallel.ForEach(imagesList, (currentImage,state) => //repeat dodaje 10 sec do roboty na fate ale znalazł 2 więcej pliki
+                    //imagesList, (currentImage, state)
+
+                    Parallel.For(0,count,(k,state) =>
                     {
+                        if (k == indexOnImageList) return;//TODO Nie ma jak sprawdic czy nie porównuje sam ze sobą
                         int comparability = 0;
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
-                            if (image.imageHash[i] == currentImage.imageHash[i]) comparability++;
-                        } 
+                            if (image.imageHash[i] == imagesList[k].imageHash[i]) comparability++;
+                        }
                         //Parallel.For(0, max, i =>
                         //{
                         //    //image.imageHash[i] == imagesList[j].imageHash[i]
@@ -137,15 +195,18 @@ namespace RSF
                             {
                                 repetings = true;
                             }
-                            image.repeatedWith = currentImage.filename + currentImage.extension;
-                            if (image.size > currentImage.size) image.repeatedBigger = true;
+                            image.repeatedWith = imagesList[k].filename + imagesList[k].extension;
+                            if (image.size > imagesList[k].size) image.repeatedBigger = true;
                             repeatedImages.Add(image);
                             breakLoop = true;
                         }
                     });
                     if (!breakLoop)
                     {
-                        imagesList.Add(image);
+                        if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList) 
+                        {
+                            imagesList.Add(image);
+                        }
                         return false;
                     }
                 }
@@ -157,12 +218,11 @@ namespace RSF
                         int comparability = 0;
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
+                            if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;
                             //image.imageHash[i] == imagesList[j].imageHash[i]
-                            //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
-                            if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań
+                            //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i]
                         }
                         comparability = (comparability / (accuracy * accuracy)) * 100;
-                        //Console.WriteLine(comparability); STRASZNIE SPOWANLNIAWYKONYWANIE KODU 17 sek bez - 1:17 z wypisywaniem //REZERO w 2:24 //IDK w 2 min
                         if (comparability > 90)
                         {
                             if (repetings == false)
@@ -175,7 +235,10 @@ namespace RSF
                         }
                     }
 
-                    imagesList.Add(image);
+                    if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList)
+                    {
+                        imagesList.Add(image);
+                    }
                     return false;
                 }
                 return true;
@@ -263,7 +326,7 @@ namespace RSF
             {
                 for (int j = 0; j < bitmap.Width; j++)
                 {
-                    b[k] = (bitmap.GetPixel(i, j).GetBrightness() < 0.5f);
+                    b[k] = (bitmap.GetPixel(i, j).GetBrightness() < 0.5f); //TODO całą tablicę byte[] zapisać jako string i porównywać czy takie same
                     k++;
                 }
             }
@@ -300,10 +363,17 @@ namespace RSF
             InitializeComponent();
         }
 
-        bool logfile = true;
+        bool jsonSaving = true;
 
         Font bolded = new Font("Georgia", 14, FontStyle.Bold);
         Font normal = new Font("Georgia", 14, FontStyle.Regular);
+
+        //private void Rchtxt_TextChanged(object sender, EventArgs e)
+        //{
+        //    this.CheckKeyword("while", Color.Purple, 0);
+        //    this.CheckKeyword("if", Color.Green, 0);
+        //}
+
 
         private async void start_Click(object sender, EventArgs e)
         {
@@ -341,61 +411,84 @@ namespace RSF
                 //logBox.SelectionFont = new Font("Arial", 100,FontStyle.Bold);
                 //logBox.SelectedText = "Apples" + "\n";
 
-                //logBox.Font = bolded; //TODO poza ifem działa, w nim już nie (prawdopodobnie działa tylko na 1 tekst a potem się nie zmienia)
-                //logBox.Text += "Test";
+                //logBox.Font = bolded; 
+                //logBox.Document.Blocks.Add(new Paragraph(new Run("Text")));
+                //logBox.AppendText("QERTXZDASRQWDSAASDADSASDASDEQ");
+                //TODO (prawdopodobnie działa tylko na 1 tekst a potem się nie zmienia), pokombinować z pragrafami i ich zanaczaniem
 
                 dir = Directory.GetFiles(textBoxDirectory.Text, "*.*", SearchOption.AllDirectories);
                 progressBar1.Maximum = dir.Length + 1;
 
-                logBox.Font = bolded;
+                
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
-                logBox.Font = normal;
+                //logBox.Font = normal;
 
-                ////TODO osobna funkcja jeśli imagelist z pliku(sprawdzenie czy nie ma nowych plików w folderze i porównywanie)
-                LoadingJson(folderName);
-
-
-                try
+                //Checking if json file is 0 bytes
+                if(File.Exists("Json/" + folderName + ".json"))
                 {
-                    await Task.Run(() => SearchingForFiles(dir));
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.ToString());
-                    Console.WriteLine(ex.InnerException);
+                    long length = new FileInfo("Json/" + folderName + ".json").Length;
+                    if (length == 0)
+                    {
+                        File.Delete("Json/" + folderName + ".json");
+                    }
                 }
 
+                bool lj = true;  //TODO usunać jak skończę działać nad json
+                if (LoadingJson(folderName, lj))
+                {
+                    try
+                    {
+                        await Task.Run(() => SearchingForFilesWithJson(dir));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.ToString());
+                        Console.WriteLine(ex.InnerException);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        await Task.Run(() => SearchingForFiles(dir));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.ToString());
+                        Console.WriteLine(ex.InnerException);
+                    }
+                }
 
                 //DISPLAING REAPATED FILES
                 if (repetings == true)
                 {
-                        logBox.Text += Environment.NewLine + "Repeating elements:" + Environment.NewLine + Environment.NewLine;
-                        for (int i = 0; i < repeatedImages.Count; i++)
+                    logBox.Text += Environment.NewLine + "Repeating elements:" + Environment.NewLine + Environment.NewLine;
+                    for (int i = 0; i < repeatedImages.Count; i++)
+                    {
+                        //Console.WriteLine(imagesList[i].repeatedWith);
+                        if (repeatedImages[i].repeatedWith != null)
                         {
-                            //Console.WriteLine(imagesList[i].repeatedWith);
-                            if (repeatedImages[i].repeatedWith != null)
-                            {
-                                //if(imagesList[i].repeatedBigger == true)
-                                //{
-                                //    logBox.Font = bolded;
-                                //    logBox.Text += imagesList[i].filename + imagesList[i].extension;
-                                //    logBox.Font = normal;
-                                //    logBox.Text += " -> " + imagesList[i].repeatedWith + Environment.NewLine;
-                                //}
-                                logBox.Text += repeatedImages[i].filename + repeatedImages[i].extension + " -> " + repeatedImages[i].repeatedWith + Environment.NewLine;
-                            }
+                            //if(imagesList[i].repeatedBigger == true)
+                            //{
+                            //    logBox.Font = bolded;
+                            //    logBox.Text += imagesList[i].filename + imagesList[i].extension;
+                            //    logBox.Font = normal;
+                            //    logBox.Text += " -> " + imagesList[i].repeatedWith + Environment.NewLine;
+                            //}
+                            logBox.Text += repeatedImages[i].filename + repeatedImages[i].extension + " -> " + repeatedImages[i].repeatedWith + Environment.NewLine;
                         }
-                    
+                    }
                 }
 
                 File.WriteAllText("log.txt", logBox.Text);
 
-                if (logfile)
+                if (jsonSaving)
                 {
-                    
+
                     if (Directory.Exists("Json"))
                     {
-                        File.WriteAllText("Json/" + folderName+".json", JsonConvert.SerializeObject(imagesList, Formatting.Indented)); 
+                        File.Delete("Json/" + folderName + ".json"); //TODO Add checikng if all files form iamgelist exosts (only on readed from json)
+                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.Indented));
                     }
                     else
                     {
@@ -425,7 +518,7 @@ namespace RSF
         public bool repeatedBigger;
 
         [JsonConstructor]
-        public Images(string _filename, string _extension, string _path, int _size, string _hash,bool _repeatedBigger)
+        public Images(string _filename, string _extension, string _path, int _size, string _hash, bool _repeatedBigger)
         {
             filename = _filename;
             extension = _extension;
