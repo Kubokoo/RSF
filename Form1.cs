@@ -10,6 +10,7 @@ namespace RSF
 {
     public partial class RSF : Form
     {
+        //TODO zrobić jakiś interfejs do podglądu/ zarządzania tymi plikami (najlepiej z miniaturami i rozmiarem)
         bool CheckingIfIsImage(string element)
         {
             byte[] streamByte = new byte[8];
@@ -48,9 +49,9 @@ namespace RSF
 
         //TODO przemyśleć jak zrobić buforowanie następnej bitmapy
 
-        bool LoadingJson(string folderName, bool lj)
+        bool LoadingJson(string folderName)
         {
-            if (File.Exists("Json/" + folderName + ".json") && lj)
+            if (File.Exists("Json/" + folderName + ".json"))
             {
                 var reader = File.ReadAllBytes("Json/" + folderName + ".json");
                 string result = System.Text.Encoding.UTF8.GetString(reader);
@@ -181,7 +182,7 @@ namespace RSF
 
                     Parallel.For(0,count,(k,state) =>
                     {
-                        if (k == indexOnImageList) return;//TODO Nie ma jak sprawdic czy nie porównuje sam ze sobą
+                        if (k == indexOnImageList) return;
                         int comparability = 0;
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
@@ -222,6 +223,7 @@ namespace RSF
                     int j = imagesList.Count - 1;
                     for (; j >= 0; j--) //repeat dodaje 10 sec do roboty na fate ale znalazł 2 więcej pliki
                     {
+                        if (j == indexOnImageList) continue;
                         int comparability = 0;
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
@@ -363,7 +365,7 @@ namespace RSF
             repetings = false;
         }
 
-        //TODO zrobić wczytywanie wyników z porpzedniego przejscia(gdzie trzymać pliki .json, jak rozpracować podfoldery)
+        //TODO .json, jak rozpracować podfoldery
 
         public RSF()
         {
@@ -404,7 +406,6 @@ namespace RSF
                 error = true;
             }
 
-            //TODO zróbić funkcje do wczytywanie json i porównyania
 
             if (error == false)
             {
@@ -440,8 +441,7 @@ namespace RSF
                     }
                 }
 
-                bool lj = true;  //TODO usunać jak skończę działać nad json
-                if (LoadingJson(folderName, lj))
+                if (LoadingJson(folderName))
                 {
                     try
                     {
