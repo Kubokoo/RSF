@@ -59,7 +59,7 @@ namespace RSF
                 {
                     JsonConvert.DeserializeObject<List<Images>>(result);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -92,7 +92,7 @@ namespace RSF
 
                     if (CheckingIfIsImage(element))
                     {
-                        if (imagesList.FindIndex(x => x.path.Contains(element)) != -1)
+                        if (imagesList.FindIndex(x => x.path.Contains(element)) != -1) //Checking if Image is alredy at imagesList
                         {
                             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
                             int indexOnImageList = imagesList.FindIndex(x => x.path.Contains(element));
@@ -109,7 +109,7 @@ namespace RSF
                     }
                     else
                     {
-                        Console.WriteLine("This element wants to be image but it isn't: " + element);
+                        Console.WriteLine("This element wants to be image but it isn't (has it's extension): " + element);
                     }
 
                 }
@@ -118,7 +118,7 @@ namespace RSF
             }
         }
 
-        void SearchingForFiles(Array dir)
+        void SearchingForFiles(Array dir) //Searching files from drive only
         {
             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "Images: " + Environment.NewLine; }));
             //Console.WriteLine("Number of elements: " + dir.GetLength(0));
@@ -180,7 +180,7 @@ namespace RSF
                 {
                     //imagesList, (currentImage, state)
 
-                    Parallel.For(0,count,(k,state) =>
+                    Parallel.For(0, count, (k, state) =>
                     {
                         if (k == indexOnImageList) return;
                         int comparability = 0;
@@ -211,7 +211,7 @@ namespace RSF
                     });
                     if (!breakLoop)
                     {
-                        if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList) 
+                        if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList)
                         {
                             imagesList.Add(image);
                         }
@@ -427,12 +427,12 @@ namespace RSF
                 dir = Directory.GetFiles(textBoxDirectory.Text, "*.*", SearchOption.AllDirectories);
                 progressBar1.Maximum = dir.Length + 1;
 
-                
+
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
                 //logBox.Font = normal;
 
                 //Checking if json file is 0 bytes
-                if(File.Exists("Json/" + folderName + ".json"))
+                if (File.Exists("Json/" + folderName + ".json"))
                 {
                     long length = new FileInfo("Json/" + folderName + ".json").Length;
                     if (length == 0)
@@ -497,6 +497,7 @@ namespace RSF
                         File.Delete("Json/" + folderName + ".json"); //TODO Add checikng if all files form iamgelist exosts (only on readed from json)
                         File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.Indented));
                     }
+
                     else
                     {
                         Directory.CreateDirectory("Json");
@@ -504,7 +505,6 @@ namespace RSF
                     }
                 }
 
-                //bolded.Dispose();
             }
         }
 
