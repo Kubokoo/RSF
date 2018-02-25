@@ -508,7 +508,7 @@ namespace RSF
             }
         }
 
-        private void stop_Click(object sender, EventArgs e)
+        private void Results_Click(object sender, EventArgs e)
         {
 
         }
