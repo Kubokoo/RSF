@@ -15,7 +15,7 @@ namespace RSF
         {
             byte[] streamByte = new byte[8];
             FileStream fs = File.OpenRead(element);
-            fs.Read(streamByte, 0, 8); //TODO zrobić na array i for(może)
+            fs.Read(streamByte, 0, 8);
 
             if (streamByte[0] == 255 && streamByte[1] == 216 && streamByte[2] == 255)
             {
@@ -47,7 +47,7 @@ namespace RSF
             return false;
         }
 
-        //TODO przemyśleć jak zrobić buforowanie następnej bitmapy
+        //TODO bufforing bitmaps
 
         bool LoadingJson(string folderName)
         {
@@ -73,7 +73,7 @@ namespace RSF
         void SearchingForFilesWithJson(Array dir)
         {
             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "Images: " + Environment.NewLine; }));
-            for (int i = 0; i < dir.GetLength(0); i++)
+            for (int i = 0; i < dir.GetLength(0); i++) //Getting all files from directory
             {
                 var element = dir.GetValue(i).ToString();
                 var extension = Path.GetExtension(element).ToLower();
@@ -153,7 +153,7 @@ namespace RSF
                         Console.WriteLine("This element wants to be image but it isn't: " + element);
                     }
 
-                    //TODO Zrobić pokazanie który plik jest większy
+                    //TODO Showing which file is bigger
                 }
                 progressBar1.Invoke(new MethodInvoker(delegate { progressBar1.Value++; }));
 
@@ -328,8 +328,6 @@ namespace RSF
             bitmapTemp.UnlockBits(bmpData);
             Bitmap bitmap = new Bitmap(bitmapTemp, new Size(accuracy, accuracy));
 
-            //bitmapTemp.Dispose();
-
             int k = 0;
             for (int i = 0; i < bitmap.Height; i++)
             {
@@ -377,12 +375,6 @@ namespace RSF
         Font bolded = new Font("Georgia", 14, FontStyle.Bold);
         Font normal = new Font("Georgia", 14, FontStyle.Regular);
 
-        //private void Rchtxt_TextChanged(object sender, EventArgs e)
-        //{
-        //    this.CheckKeyword("while", Color.Purple, 0);
-        //    this.CheckKeyword("if", Color.Green, 0);
-        //}
-
 
         private async void start_Click(object sender, EventArgs e)
         {
@@ -392,6 +384,7 @@ namespace RSF
             //TRYING TO GET FILES FROM USER SPECIFIED DIRECTORY
             bool error = false;
             Array dir;
+            logBox.Text += DateTime.Now.ToString();
 
             try
             {
@@ -475,33 +468,28 @@ namespace RSF
                         //Console.WriteLine(imagesList[i].repeatedWith);
                         if (repeatedImages[i].repeatedWith != null)
                         {
-                            //if(imagesList[i].repeatedBigger == true)
-                            //{
-                            //    logBox.Font = bolded;
-                            //    logBox.Text += imagesList[i].filename + imagesList[i].extension;
-                            //    logBox.Font = normal;
-                            //    logBox.Text += " -> " + imagesList[i].repeatedWith + Environment.NewLine;
-                            //}
                             logBox.Text += repeatedImages[i].filename + repeatedImages[i].extension + " -> " + repeatedImages[i].repeatedWith + Environment.NewLine;
                         }
                     }
+                    ResultsWindowShow();
                 }
 
                 File.WriteAllText("log.txt", logBox.Text);
+                
 
                 if (jsonSaving)
                 {
 
                     if (Directory.Exists("Json"))
                     {
-                        File.Delete("Json/" + folderName + ".json"); //TODO Add checikng if all files form iamgelist exosts (only on readed from json)
-                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.Indented));
+                        File.Delete("Json/" + folderName + ".json"); //TODO Add checikng if all files form iamgelist exists (only on readed from json)
+                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None)); // .Indented gives more readable Json file but it take a lot of space 2,22 MB vs 5,18 MB
                     }
 
                     else
                     {
                         Directory.CreateDirectory("Json");
-                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.Indented));
+                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None));
                     }
                 }
 
@@ -510,7 +498,13 @@ namespace RSF
 
         private void Results_Click(object sender, EventArgs e)
         {
-
+            ResultsWindowShow();
+        }
+        void ResultsWindowShow()
+        {
+                ResultsWindow window = new ResultsWindow();
+                window.Show();
+            
         }
     }
     public class Images
