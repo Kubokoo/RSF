@@ -10,7 +10,6 @@ namespace RSF
 {
     public partial class RSF : Form
     {
-        //TODO zrobić jakiś interfejs do podglądu/ zarządzania tymi plikami (najlepiej z miniaturami i rozmiarem)
         bool CheckingIfIsImage(string element)
         {
             byte[] streamByte = new byte[8];
@@ -59,8 +58,9 @@ namespace RSF
                 {
                     JsonConvert.DeserializeObject<List<Images>>(result);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.Write(ex.ToString());
                     return false;
                 }
                 imagesList = JsonConvert.DeserializeObject<List<Images>>(result);
@@ -161,7 +161,7 @@ namespace RSF
         } //TODO Dodać wczytywanie listy komend z pliku(wykorzystać 2 przycisk)
 
 
-        List<Images> repeatedImages = new List<Images>();
+        public static List<Images> repeatedImages = new List<Images>();
         bool repetings = false;
 
         //COMPARING FOR IMAGES ONLY
@@ -204,6 +204,7 @@ namespace RSF
                                 repetings = true;
                             }
                             image.repeatedWith = imagesList[k].filename + imagesList[k].extension;
+                            image.repeatedWithPath = imagesList[k].path;
                             if (image.size > imagesList[k].size) image.repeatedBigger = true;
                             repeatedImages.Add(image);
                             breakLoop = true;
@@ -239,6 +240,7 @@ namespace RSF
                                 repetings = true;
                             }
                             image.repeatedWith = imagesList[j].filename + imagesList[j].extension;
+                            image.repeatedWithPath = imagesList[j].path;
                             repeatedImages.Add(image);
                             return true;
                         }
@@ -251,61 +253,6 @@ namespace RSF
                     return false;
                 }
                 return true;
-                //for (; j >= 0; j--) //repeat dodaje 10 sec do roboty na fate ale znalazł 2 więcej pliki
-                //{
-                //    int comparability = 0; //TODO Przemyśleć przejście na true false
-                //    for (int i = 0; i < accuracy * accuracy; i++)
-                //    {
-                //        //image.imageHash[i] == imagesList[j].imageHash[i]
-                //        //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
-                //        if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań
-                //    }  //re:zero 40 min i nie skończył
-                //    //Parallel.For(0, max, i =>
-                //    //{
-                //    //    //image.imageHash[i] == imagesList[j].imageHash[i]
-                //    //    //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
-                //    //    if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań // 78,086
-                //    //}); //TODO zprawdzić czy for i parell for dają takie same rezultaty (powtarzające się obrazy)
-                //    comparability = (comparability / (accuracy * accuracy)) * 100;
-                //    if (comparability > 90)
-                //    {
-                //        if (repetings == false)
-                //        {
-                //            repetings = true;
-                //        }
-                //        image.repeatedWith = imagesList[j].filename + imagesList[j].extension;
-                //        imagesList.Add(image);
-                //        return true;
-                //    }
-                //}
-
-                //imagesList.Add(image);
-                //return false;
-
-                //int j = imagesList.Count - 1;
-                //Parallel.For(0, j, k => //ZERO PRZYŚPIESZENIA IDK W 6 MIN NA OBU METODACH
-                //{
-                //   int comparability = 0;
-                //   for (int i = 0; i < accuracy * accuracy; i++)
-                //   {
-                //        if (image.imageHash[i] == imagesList[k].imageHash[i]) comparability++;
-                //   }
-                //   comparability = (comparability / (accuracy * accuracy)) * 100;
-                //   Console.WriteLine(comparability);
-                //   if (comparability > 90)
-                //   {
-                //       if (repetings == false)
-                //       {
-                //           repetings = true;
-                //       }
-                //       image.repeatedWith = imagesList[k].filename + imagesList[k].extension;
-                //       imagesList.Add(image);
-                //   }
-                //});
-                //if (repetings == false)
-                //{
-                //    imagesList.Add(image);
-                //}
             }
         }
 
@@ -317,15 +264,6 @@ namespace RSF
         {
             bool[] b = new bool[accuracy * accuracy];
             Bitmap bitmapTemp = new Bitmap(path);
-            Rectangle rect = new Rectangle(0, 0, bitmapTemp.Width, bitmapTemp.Height);
-
-            System.Drawing.Imaging.BitmapData bmpData =
-                bitmapTemp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                bitmapTemp.PixelFormat);
-
-            bmpData.PixelFormat = System.Drawing.Imaging.PixelFormat.Format16bppGrayScale;
-
-            bitmapTemp.UnlockBits(bmpData);
             Bitmap bitmap = new Bitmap(bitmapTemp, new Size(accuracy, accuracy));
 
             int k = 0;
@@ -363,7 +301,7 @@ namespace RSF
             repetings = false;
         }
 
-        //TODO .json, jak rozpracować podfoldery
+        //TODO .json, how to get subfolders
 
         public RSF()
         {
@@ -384,7 +322,7 @@ namespace RSF
             //TRYING TO GET FILES FROM USER SPECIFIED DIRECTORY
             bool error = false;
             Array dir;
-            logBox.Text += DateTime.Now.ToString();
+            logBox.Text += DateTime.Now.ToString(); //Showing date (for easy displaing of time passed)
 
             try
             {
@@ -407,15 +345,6 @@ namespace RSF
                 folderName = folderName.Remove(0, folderName.LastIndexOf(@"\") + 1);
 
                 progressBar1.Value = 1;
-
-                //logBox.SelectionBullet = true;
-                //logBox.SelectionFont = new Font("Arial", 100,FontStyle.Bold);
-                //logBox.SelectedText = "Apples" + "\n";
-
-                //logBox.Font = bolded; 
-                //logBox.Document.Blocks.Add(new Paragraph(new Run("Text")));
-                //logBox.AppendText("QERTXZDASRQWDSAASDADSASDASDEQ");
-                //TODO (prawdopodobnie działa tylko na 1 tekst a potem się nie zmienia), pokombinować z pragrafami i ich zanaczaniem
 
                 dir = Directory.GetFiles(textBoxDirectory.Text, "*.*", SearchOption.AllDirectories);
                 progressBar1.Maximum = dir.Length + 1;
@@ -460,24 +389,24 @@ namespace RSF
                 }
 
                 //DISPLAING REAPATED FILES
-                if (repetings == true)
+                if (repetings == true)  //TODO CACHE ALL FILE AND THEN PROCESS THEM
                 {
-                    logBox.Text += Environment.NewLine + "Repeating elements:" + Environment.NewLine + Environment.NewLine;
-                    for (int i = 0; i < repeatedImages.Count; i++)
+                    try
                     {
-                        //Console.WriteLine(imagesList[i].repeatedWith);
-                        if (repeatedImages[i].repeatedWith != null)
-                        {
-                            logBox.Text += repeatedImages[i].filename + repeatedImages[i].extension + " -> " + repeatedImages[i].repeatedWith + Environment.NewLine;
-                        }
+                        await Task.Run(() => ShowingRepeatedElements());
                     }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.ToString());
+                        Console.WriteLine(ex.InnerException);
+                    }
+
                     ResultsWindowShow();
                 }
 
                 File.WriteAllText("log.txt", logBox.Text);
-                
 
-                if (jsonSaving)
+                if (jsonSaving) //Checks if user wants to save json file
                 {
 
                     if (Directory.Exists("Json"))
@@ -496,17 +425,30 @@ namespace RSF
             }
         }
 
-        private void Results_Click(object sender, EventArgs e)
+        private void Results_Click(object sender, EventArgs e) //TODO Watch scanned folder for changes and scan them too
         {
             ResultsWindowShow();
         }
+
         void ResultsWindowShow()
         {
-                ResultsWindow window = new ResultsWindow();
-                window.Show();
-            
+            ResultsWindow window = new ResultsWindow();
+            window.Show();
+        }
+
+        void ShowingRepeatedElements()
+        {
+            logBox.Invoke(new MethodInvoker(delegate { logBox.Text += Environment.NewLine + "Repeating elements:" + Environment.NewLine + Environment.NewLine; }));
+            for (int i = 0; i < repeatedImages.Count; i++)
+            {
+                if (repeatedImages[i].repeatedWith != null)
+                {
+                    logBox.Invoke(new MethodInvoker(delegate { logBox.Text += repeatedImages[i].filename + repeatedImages[i].extension + " -> " + repeatedImages[i].repeatedWith + Environment.NewLine; }));
+                }
+            }
         }
     }
+
     public class Images
     {
         public string filename;
@@ -516,7 +458,6 @@ namespace RSF
         public string hash;
         public bool[] imageHash;
         public string repeatedWith;
-        public bool repeatedBigger;
 
         [JsonConstructor]
         public Images(string _filename, string _extension, string _path, int _size, string _hash, bool _repeatedBigger)
@@ -539,9 +480,7 @@ namespace RSF
             repeatedWith = _repeatedWith;
         }
 
-        public Images(bool _repeatedBigger)
-        {
-            repeatedBigger = _repeatedBigger;
-        }
+        public string repeatedWithPath {get;set;}
+        public bool repeatedBigger { get; set; }
     }
 }
