@@ -310,10 +310,6 @@ namespace RSF
 
         bool jsonSaving = true;
 
-        Font bolded = new Font("Georgia", 14, FontStyle.Bold);
-        Font normal = new Font("Georgia", 14, FontStyle.Regular);
-
-
         private async void start_Click(object sender, EventArgs e)
         {
             //CLENING GLOBAL VARIABLES FOR SECOND RUN
@@ -322,7 +318,7 @@ namespace RSF
             //TRYING TO GET FILES FROM USER SPECIFIED DIRECTORY
             bool error = false;
             Array dir;
-            logBox.Text += DateTime.Now.ToString(); //Showing date (for easy displaing of time passed)
+            logBox.Text += DateTime.Now.ToString() + Environment.NewLine; //Showing date (for easy displaing of time passed)
 
             try
             {
@@ -348,7 +344,6 @@ namespace RSF
 
                 dir = Directory.GetFiles(textBoxDirectory.Text, "*.*", SearchOption.AllDirectories);
                 progressBar1.Maximum = dir.Length + 1;
-
 
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
                 //logBox.Font = normal;

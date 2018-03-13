@@ -9,7 +9,7 @@ namespace RSF
         {
             InitializeComponent();
             TextBoxLeft.Text = RSF.repeatedImages[0].filename.ToString() + RSF.repeatedImages[0].extension.ToString(); //TODO ADD EXEPTOIONS IF NOT PROCESSED (NO FILE TO SHOW)
-            Bitmap previewLeft = new Bitmap(Image.FromFile(RSF.repeatedImages[0].path), pictureBoxLeft.Size);
+            Bitmap previewLeft = new Bitmap(Image.FromFile(RSF.repeatedImages[0].path), pictureBoxLeft.Size);   //TODO Add bigger reolution for bigger window
             pictureBoxLeft.Image = previewLeft;
 
             TextBoxRight.Text = RSF.repeatedImages[0].repeatedWith.ToString();
