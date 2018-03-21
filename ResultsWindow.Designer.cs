@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.button4 = new System.Windows.Forms.Button();
+            this.buttonPrevious = new System.Windows.Forms.Button();
             this.TextBoxLeft = new System.Windows.Forms.TextBox();
             this.pictureBoxLeft = new System.Windows.Forms.PictureBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.buttonNext = new System.Windows.Forms.Button();
             this.TextBoxRight = new System.Windows.Forms.TextBox();
             this.pictureBoxRight = new System.Windows.Forms.PictureBox();
-            this.buttonNext = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.buttonPrevious = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -69,6 +69,27 @@
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 0;
             // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button4.Location = new System.Drawing.Point(84, 343);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 6;
+            this.button4.Text = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // buttonPrevious
+            // 
+            this.buttonPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonPrevious.Location = new System.Drawing.Point(3, 343);
+            this.buttonPrevious.Name = "buttonPrevious";
+            this.buttonPrevious.Size = new System.Drawing.Size(75, 23);
+            this.buttonPrevious.TabIndex = 5;
+            this.buttonPrevious.Text = "button3";
+            this.buttonPrevious.UseVisualStyleBackColor = true;
+            this.buttonPrevious.Click += new System.EventHandler(this.buttonPrevious_Click);
+            // 
             // TextBoxLeft
             // 
             this.TextBoxLeft.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -90,13 +111,34 @@
             this.pictureBoxLeft.TabIndex = 0;
             this.pictureBoxLeft.TabStop = false;
             // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(132, 343);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // buttonNext
+            // 
+            this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonNext.Location = new System.Drawing.Point(213, 343);
+            this.buttonNext.Name = "buttonNext";
+            this.buttonNext.Size = new System.Drawing.Size(75, 23);
+            this.buttonNext.TabIndex = 3;
+            this.buttonNext.Text = "button1";
+            this.buttonNext.UseVisualStyleBackColor = true;
+            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
+            // 
             // TextBoxRight
             // 
             this.TextBoxRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextBoxRight.Location = new System.Drawing.Point(4, 211);
             this.TextBoxRight.Name = "TextBoxRight";
-            this.TextBoxRight.Size = new System.Drawing.Size(296, 20);
+            this.TextBoxRight.Size = new System.Drawing.Size(300, 20);
             this.TextBoxRight.TabIndex = 2;
             // 
             // pictureBoxRight
@@ -106,48 +148,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxRight.Location = new System.Drawing.Point(4, 0);
             this.pictureBoxRight.Name = "pictureBoxRight";
-            this.pictureBoxRight.Size = new System.Drawing.Size(296, 202);
+            this.pictureBoxRight.Size = new System.Drawing.Size(300, 202);
             this.pictureBoxRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxRight.TabIndex = 1;
             this.pictureBoxRight.TabStop = false;
-            // 
-            // buttonNext
-            // 
-            this.buttonNext.Location = new System.Drawing.Point(211, 343);
-            this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(75, 23);
-            this.buttonNext.TabIndex = 3;
-            this.buttonNext.Text = "button1";
-            this.buttonNext.UseVisualStyleBackColor = true;
-            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(130, 343);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // buttonPrevious
-            // 
-            this.buttonPrevious.Location = new System.Drawing.Point(3, 343);
-            this.buttonPrevious.Name = "buttonPrevious";
-            this.buttonPrevious.Size = new System.Drawing.Size(75, 23);
-            this.buttonPrevious.TabIndex = 5;
-            this.buttonPrevious.Text = "button3";
-            this.buttonPrevious.UseVisualStyleBackColor = true;
-            this.buttonPrevious.Click += new System.EventHandler(this.buttonPrevious_Click);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(84, 343);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
             // 
             // ResultsWindow
             // 

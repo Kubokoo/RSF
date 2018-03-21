@@ -122,7 +122,7 @@ namespace RSF
         {
             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "Images: " + Environment.NewLine; }));
             //Console.WriteLine("Number of elements: " + dir.GetLength(0));
-            for (int i = 0; i < dir.GetLength(0); i++)
+            for (int i = 0; i < dir.GetLength(0); i++)  //TODO TRY DOING THIS ON PARREL FOR WITH LOCKING 
             {
                 var element = dir.GetValue(i).ToString();
                 var extension = Path.GetExtension(element).ToLower();
@@ -153,7 +153,6 @@ namespace RSF
                         Console.WriteLine("This element wants to be image but it isn't: " + element);
                     }
 
-                    //TODO Showing which file is bigger
                 }
                 progressBar1.Invoke(new MethodInvoker(delegate { progressBar1.Value++; }));
 
@@ -263,8 +262,7 @@ namespace RSF
         public bool[] imageHashing(string path)
         {
             bool[] b = new bool[accuracy * accuracy];
-            Bitmap bitmapTemp = new Bitmap(path);
-            Bitmap bitmap = new Bitmap(bitmapTemp, new Size(accuracy, accuracy));
+            Bitmap bitmap = new Bitmap(Image.FromFile(path), new Size(accuracy, accuracy));
 
             int k = 0;
             for (int i = 0; i < bitmap.Height; i++)
@@ -360,6 +358,14 @@ namespace RSF
 
                 if (LoadingJson(folderName))
                 {
+                    Parallel.ForEach(imagesList, (currentImage) =>
+                    {
+                        if (!File.Exists(currentImage.path))
+                        {
+                            imagesList.Remove(currentImage);
+                        }
+                    });
+
                     try
                     {
                         await Task.Run(() => SearchingForFilesWithJson(dir));
@@ -399,7 +405,16 @@ namespace RSF
                     ResultsWindowShow();
                 }
 
-                File.WriteAllText("log.txt", logBox.Text);
+                try
+                {
+                    File.WriteAllText("log.txt", logBox.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    throw;
+                }
+                
 
                 if (jsonSaving) //Checks if user wants to save json file
                 {
@@ -416,6 +431,8 @@ namespace RSF
                         File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None));
                     }
                 }
+
+                GC.Collect();
 
             }
         }

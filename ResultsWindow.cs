@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RSF
@@ -9,23 +10,47 @@ namespace RSF
 
         void ShowResults() //TODO USES TO MUCH RAM!!!!!!!
         {
+            if(RSF.repeatedImages.Count == 0)
+            {
+                MessageBox.Show("There's no repeated images to show.");
+                pictureBoxRight.Image = Properties.Resources.link_broken;
+                pictureBoxLeft.Image = Properties.Resources.link_broken;
+                return;
+            }
+
             if(pictureBoxLeft.Image!=null)
             {
                 pictureBoxLeft.Image.Dispose();
                 pictureBoxRight.Image.Dispose();
+                System.GC.Collect();
             }
             
             if (RSF.repeatedImages.Count == i) i = 0;
             if (i == -1) i = RSF.repeatedImages.Count - 1;
 
+            try
+            {
+                TextBoxLeft.Text = RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString();
+                Bitmap previewLeft = new Bitmap(Image.FromFile(RSF.repeatedImages[i].path), pictureBoxRight.Size);  //TODO Add bigger reolution for bigger window
+                pictureBoxLeft.Image = previewLeft; //TODO TRY DISPOSING IT OUTSIDE TRY
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("This file no longer exists");
+                pictureBoxLeft.Image = Properties.Resources.link_broken;
+            }
 
-            TextBoxLeft.Text = RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString(); //TODO ADD EXEPTOIONS IF NOT PROCESSED (NO FILE TO SHOW)
-            Bitmap previewLeft = new Bitmap(RSF.repeatedImages[i].path);   //TODO Add bigger reolution for bigger window
-            pictureBoxLeft.Image = previewLeft;
-
-            TextBoxRight.Text = RSF.repeatedImages[i].repeatedWith.ToString();
-            Bitmap previewRight = new Bitmap(RSF.repeatedImages[i].repeatedWithPath); //TODO ADD PROPER RESIVE OF FIELDS WITH IMAGES
-            pictureBoxRight.Image = previewRight;
+            try
+            {
+                TextBoxRight.Text = RSF.repeatedImages[i].repeatedWith.ToString();
+                Bitmap previewRight = new Bitmap(Image.FromFile(RSF.repeatedImages[i].repeatedWithPath), pictureBoxLeft.Size); //TODO ADD PROPER RESIVE OF FIELDS WITH IMAGES
+                pictureBoxRight.Image = previewRight;
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("This file no longer exists");
+                pictureBoxRight.Image = Properties.Resources.link_broken;
+            }
         }
 
         public ResultsWindow()
