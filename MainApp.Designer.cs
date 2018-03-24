@@ -32,10 +32,10 @@
             this.textBoxDirectory = new System.Windows.Forms.TextBox();
             this.directory = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.start = new System.Windows.Forms.Button();
             this.logBox = new System.Windows.Forms.RichTextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.start = new System.Windows.Forms.Button();
+            this.Results = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -91,10 +91,10 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.60107F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.06559F));
-            this.tableLayoutPanel2.Controls.Add(this.button1, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.start, 2, 2);
             this.tableLayoutPanel2.Controls.Add(this.logBox, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.progressBar1, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.start, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.Results, 2, 2);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(13, 46);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
@@ -103,28 +103,6 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(498, 162);
             this.tableLayoutPanel2.TabIndex = 1;
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold);
-            this.button1.Location = new System.Drawing.Point(3, 129);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(159, 30);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // start
-            // 
-            this.start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.start.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold);
-            this.start.Location = new System.Drawing.Point(336, 129);
-            this.start.Name = "start";
-            this.start.Size = new System.Drawing.Size(159, 30);
-            this.start.TabIndex = 1;
-            this.start.Text = "Start";
-            this.start.UseVisualStyleBackColor = true;
-            this.start.Click += new System.EventHandler(this.start_Click);
             // 
             // logBox
             // 
@@ -150,6 +128,30 @@
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(492, 19);
             this.progressBar1.TabIndex = 3;
+            // 
+            // start
+            // 
+            this.start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.start.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold);
+            this.start.Location = new System.Drawing.Point(3, 129);
+            this.start.Name = "start";
+            this.start.Size = new System.Drawing.Size(161, 30);
+            this.start.TabIndex = 1;
+            this.start.Text = "Start";
+            this.start.UseVisualStyleBackColor = true;
+            this.start.Click += new System.EventHandler(this.start_Click);
+            // 
+            // Results
+            // 
+            this.Results.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Results.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold);
+            this.Results.Location = new System.Drawing.Point(335, 129);
+            this.Results.Name = "Results";
+            this.Results.Size = new System.Drawing.Size(160, 30);
+            this.Results.TabIndex = 4;
+            this.Results.Text = "Get results";
+            this.Results.UseVisualStyleBackColor = true;
+            this.Results.Click += new System.EventHandler(this.Results_Click);
             // 
             // RSF
             // 
@@ -177,8 +179,8 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.RichTextBox logBox;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button start;
+        private System.Windows.Forms.Button Results;
     }
 }
 

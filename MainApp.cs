@@ -10,24 +10,16 @@ namespace RSF
 {
     public partial class RSF : Form
     {
-        //TODO zrobić jakiś interfejs do podglądu/ zarządzania tymi plikami (najlepiej z miniaturami i rozmiarem)
         bool CheckingIfIsImage(string element)
         {
             byte[] streamByte = new byte[8];
             FileStream fs = File.OpenRead(element);
-            fs.Read(streamByte, 0, 8); //TODO zrobić na array i for(może)
+            fs.Read(streamByte, 0, 8);
 
             if (streamByte[0] == 255 && streamByte[1] == 216 && streamByte[2] == 255)
             {
                 return true; //its JPG image
             }
-
-            //if (streamByte[0] == 47 && streamByte[1] == 49
-            //    && streamByte[2] == 46 && streamByte[3] == 38
-            //    && (streamByte[4] == 37 || streamByte[4] == 39) && streamByte[5] == 61)
-            //{
-            //    return true; //its GIF image
-            //}
 
             if (streamByte[0] == 71 && streamByte[1] == 73
                 && streamByte[2] == 70 && streamByte[3] == 56
@@ -47,8 +39,6 @@ namespace RSF
             return false;
         }
 
-        //TODO przemyśleć jak zrobić buforowanie następnej bitmapy
-
         bool LoadingJson(string folderName)
         {
             if (File.Exists("Json/" + folderName + ".json"))
@@ -59,8 +49,9 @@ namespace RSF
                 {
                     JsonConvert.DeserializeObject<List<Images>>(result);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.Write(ex.ToString());
                     return false;
                 }
                 imagesList = JsonConvert.DeserializeObject<List<Images>>(result);
@@ -73,7 +64,7 @@ namespace RSF
         void SearchingForFilesWithJson(Array dir)
         {
             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "Images: " + Environment.NewLine; }));
-            for (int i = 0; i < dir.GetLength(0); i++)
+            for (int i = 0; i < dir.GetLength(0); i++) //Gets all files from directory
             {
                 var element = dir.GetValue(i).ToString();
                 var extension = Path.GetExtension(element).ToLower();
@@ -121,18 +112,14 @@ namespace RSF
         void SearchingForFiles(Array dir) //Searching files from drive only
         {
             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "Images: " + Environment.NewLine; }));
-            //Console.WriteLine("Number of elements: " + dir.GetLength(0));
-            for (int i = 0; i < dir.GetLength(0); i++)
+            for (int i = 0; i < dir.GetLength(0); i++)  //TODO TRY DOING THIS ON PARREL FOR WITH LOCKING 
             {
                 var element = dir.GetValue(i).ToString();
                 var extension = Path.GetExtension(element).ToLower();
                 var filename = Path.GetFileName(element);
                 filename = filename.Remove(filename.Length - extension.Length, extension.Length);
-                //Debug.WriteLine(extension);
                 if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg")
                 {
-                    //MemoryStream cache = new MemoryStream(File.ReadAllBytes(dir.GetValue(i+1).ToString()));
-
                     //Checking if file is 0 Bytes
                     long length = new FileInfo(element).Length;
                     if (length == 0)
@@ -153,7 +140,6 @@ namespace RSF
                         Console.WriteLine("This element wants to be image but it isn't: " + element);
                     }
 
-                    //TODO Zrobić pokazanie który plik jest większy
                 }
                 progressBar1.Invoke(new MethodInvoker(delegate { progressBar1.Value++; }));
 
@@ -161,7 +147,7 @@ namespace RSF
         } //TODO Dodać wczytywanie listy komend z pliku(wykorzystać 2 przycisk)
 
 
-        List<Images> repeatedImages = new List<Images>();
+        public static List<Images> repeatedImages = new List<Images>();
         bool repetings = false;
 
         //COMPARING FOR IMAGES ONLY
@@ -178,8 +164,6 @@ namespace RSF
                 int count = imagesList.Count;
                 if (imagesList.Count > 100)
                 {
-                    //imagesList, (currentImage, state)
-
                     Parallel.For(0, count, (k, state) =>
                     {
                         if (k == indexOnImageList) return;
@@ -204,6 +188,7 @@ namespace RSF
                                 repetings = true;
                             }
                             image.repeatedWith = imagesList[k].filename + imagesList[k].extension;
+                            image.repeatedWithPath = imagesList[k].path;
                             if (image.size > imagesList[k].size) image.repeatedBigger = true;
                             repeatedImages.Add(image);
                             breakLoop = true;
@@ -239,6 +224,7 @@ namespace RSF
                                 repetings = true;
                             }
                             image.repeatedWith = imagesList[j].filename + imagesList[j].extension;
+                            image.repeatedWithPath = imagesList[j].path;
                             repeatedImages.Add(image);
                             return true;
                         }
@@ -251,61 +237,6 @@ namespace RSF
                     return false;
                 }
                 return true;
-                //for (; j >= 0; j--) //repeat dodaje 10 sec do roboty na fate ale znalazł 2 więcej pliki
-                //{
-                //    int comparability = 0; //TODO Przemyśleć przejście na true false
-                //    for (int i = 0; i < accuracy * accuracy; i++)
-                //    {
-                //        //image.imageHash[i] == imagesList[j].imageHash[i]
-                //        //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
-                //        if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań
-                //    }  //re:zero 40 min i nie skończył
-                //    //Parallel.For(0, max, i =>
-                //    //{
-                //    //    //image.imageHash[i] == imagesList[j].imageHash[i]
-                //    //    //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
-                //    //    if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań // 78,086
-                //    //}); //TODO zprawdzić czy for i parell for dają takie same rezultaty (powtarzające się obrazy)
-                //    comparability = (comparability / (accuracy * accuracy)) * 100;
-                //    if (comparability > 90)
-                //    {
-                //        if (repetings == false)
-                //        {
-                //            repetings = true;
-                //        }
-                //        image.repeatedWith = imagesList[j].filename + imagesList[j].extension;
-                //        imagesList.Add(image);
-                //        return true;
-                //    }
-                //}
-
-                //imagesList.Add(image);
-                //return false;
-
-                //int j = imagesList.Count - 1;
-                //Parallel.For(0, j, k => //ZERO PRZYŚPIESZENIA IDK W 6 MIN NA OBU METODACH
-                //{
-                //   int comparability = 0;
-                //   for (int i = 0; i < accuracy * accuracy; i++)
-                //   {
-                //        if (image.imageHash[i] == imagesList[k].imageHash[i]) comparability++;
-                //   }
-                //   comparability = (comparability / (accuracy * accuracy)) * 100;
-                //   Console.WriteLine(comparability);
-                //   if (comparability > 90)
-                //   {
-                //       if (repetings == false)
-                //       {
-                //           repetings = true;
-                //       }
-                //       image.repeatedWith = imagesList[k].filename + imagesList[k].extension;
-                //       imagesList.Add(image);
-                //   }
-                //});
-                //if (repetings == false)
-                //{
-                //    imagesList.Add(image);
-                //}
             }
         }
 
@@ -316,19 +247,7 @@ namespace RSF
         public bool[] imageHashing(string path)
         {
             bool[] b = new bool[accuracy * accuracy];
-            Bitmap bitmapTemp = new Bitmap(path);
-            Rectangle rect = new Rectangle(0, 0, bitmapTemp.Width, bitmapTemp.Height);
-
-            System.Drawing.Imaging.BitmapData bmpData =
-                bitmapTemp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                bitmapTemp.PixelFormat);
-
-            bmpData.PixelFormat = System.Drawing.Imaging.PixelFormat.Format16bppGrayScale;
-
-            bitmapTemp.UnlockBits(bmpData);
-            Bitmap bitmap = new Bitmap(bitmapTemp, new Size(accuracy, accuracy));
-
-            //bitmapTemp.Dispose();
+            Bitmap bitmap = new Bitmap(Image.FromFile(path), new Size(accuracy, accuracy));
 
             int k = 0;
             for (int i = 0; i < bitmap.Height; i++)
@@ -365,7 +284,7 @@ namespace RSF
             repetings = false;
         }
 
-        //TODO .json, jak rozpracować podfoldery
+        //TODO .json, how to get subfolders
 
         public RSF()
         {
@@ -373,16 +292,6 @@ namespace RSF
         }
 
         bool jsonSaving = true;
-
-        Font bolded = new Font("Georgia", 14, FontStyle.Bold);
-        Font normal = new Font("Georgia", 14, FontStyle.Regular);
-
-        //private void Rchtxt_TextChanged(object sender, EventArgs e)
-        //{
-        //    this.CheckKeyword("while", Color.Purple, 0);
-        //    this.CheckKeyword("if", Color.Green, 0);
-        //}
-
 
         private async void start_Click(object sender, EventArgs e)
         {
@@ -392,6 +301,7 @@ namespace RSF
             //TRYING TO GET FILES FROM USER SPECIFIED DIRECTORY
             bool error = false;
             Array dir;
+            logBox.Text += DateTime.Now.ToString() + Environment.NewLine; //Showing date (for easy displaing of time passed)
 
             try
             {
@@ -415,18 +325,8 @@ namespace RSF
 
                 progressBar1.Value = 1;
 
-                //logBox.SelectionBullet = true;
-                //logBox.SelectionFont = new Font("Arial", 100,FontStyle.Bold);
-                //logBox.SelectedText = "Apples" + "\n";
-
-                //logBox.Font = bolded; 
-                //logBox.Document.Blocks.Add(new Paragraph(new Run("Text")));
-                //logBox.AppendText("QERTXZDASRQWDSAASDADSASDASDEQ");
-                //TODO (prawdopodobnie działa tylko na 1 tekst a potem się nie zmienia), pokombinować z pragrafami i ich zanaczaniem
-
                 dir = Directory.GetFiles(textBoxDirectory.Text, "*.*", SearchOption.AllDirectories);
                 progressBar1.Maximum = dir.Length + 1;
-
 
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
                 //logBox.Font = normal;
@@ -443,6 +343,14 @@ namespace RSF
 
                 if (LoadingJson(folderName))
                 {
+                    Parallel.ForEach(imagesList, (currentImage) =>
+                    {
+                        if (!File.Exists(currentImage.path))
+                        {
+                            imagesList.Remove(currentImage);
+                        }
+                    });
+
                     try
                     {
                         await Task.Run(() => SearchingForFilesWithJson(dir));
@@ -467,52 +375,76 @@ namespace RSF
                 }
 
                 //DISPLAING REAPATED FILES
-                if (repetings == true)
+                if (repetings == true)  //TODO CACHE ALL FILE AND THEN PROCESS THEM
                 {
-                    logBox.Text += Environment.NewLine + "Repeating elements:" + Environment.NewLine + Environment.NewLine;
-                    for (int i = 0; i < repeatedImages.Count; i++)
+                    try
                     {
-                        //Console.WriteLine(imagesList[i].repeatedWith);
-                        if (repeatedImages[i].repeatedWith != null)
-                        {
-                            //if(imagesList[i].repeatedBigger == true)
-                            //{
-                            //    logBox.Font = bolded;
-                            //    logBox.Text += imagesList[i].filename + imagesList[i].extension;
-                            //    logBox.Font = normal;
-                            //    logBox.Text += " -> " + imagesList[i].repeatedWith + Environment.NewLine;
-                            //}
-                            logBox.Text += repeatedImages[i].filename + repeatedImages[i].extension + " -> " + repeatedImages[i].repeatedWith + Environment.NewLine;
-                        }
+                        await Task.Run(() => ShowingRepeatedElements());
                     }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.ToString());
+                        Console.WriteLine(ex.InnerException);
+                    }
+
+                    ResultsWindowShow();
                 }
 
-                File.WriteAllText("log.txt", logBox.Text);
+                try
+                {
+                    File.WriteAllText("log.txt", logBox.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    throw;
+                }
+                
 
-                if (jsonSaving)
+                if (jsonSaving) //Checks if user wants to save json file
                 {
 
                     if (Directory.Exists("Json"))
                     {
-                        File.Delete("Json/" + folderName + ".json"); //TODO Add checikng if all files form iamgelist exosts (only on readed from json)
-                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.Indented));
+                        File.Delete("Json/" + folderName + ".json");
+                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None)); // .Indented gives more readable Json file but it take a lot of space 2,22 MB vs 5,18 MB
                     }
 
                     else
                     {
                         Directory.CreateDirectory("Json");
-                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.Indented));
+                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None));
                     }
                 }
 
+                GC.Collect();
             }
         }
 
-        private void stop_Click(object sender, EventArgs e)
+        private void Results_Click(object sender, EventArgs e) //TODO Watch scanned folder for changes and scan them too
         {
+            ResultsWindowShow();
+        }
 
+        void ResultsWindowShow()
+        {
+            ResultsWindow window = new ResultsWindow();
+            window.Show();
+        }
+
+        void ShowingRepeatedElements()
+        {
+            logBox.Invoke(new MethodInvoker(delegate { logBox.Text += Environment.NewLine + "Repeating elements:" + Environment.NewLine + Environment.NewLine; }));
+            for (int i = 0; i < repeatedImages.Count; i++)
+            {
+                if (repeatedImages[i].repeatedWith != null)
+                {
+                    logBox.Invoke(new MethodInvoker(delegate { logBox.Text += repeatedImages[i].filename + repeatedImages[i].extension + " -> " + repeatedImages[i].repeatedWith + Environment.NewLine; }));
+                }
+            }
         }
     }
+
     public class Images
     {
         public string filename;
@@ -522,7 +454,6 @@ namespace RSF
         public string hash;
         public bool[] imageHash;
         public string repeatedWith;
-        public bool repeatedBigger;
 
         [JsonConstructor]
         public Images(string _filename, string _extension, string _path, int _size, string _hash, bool _repeatedBigger)
@@ -545,9 +476,7 @@ namespace RSF
             repeatedWith = _repeatedWith;
         }
 
-        public Images(bool _repeatedBigger)
-        {
-            repeatedBigger = _repeatedBigger;
-        }
+        public string repeatedWithPath {get;set;}
+        public bool repeatedBigger { get; set; }
     }
 }
