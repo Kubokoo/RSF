@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.button4 = new System.Windows.Forms.Button();
+            this.DeleteLeft = new System.Windows.Forms.Button();
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.TextBoxLeft = new System.Windows.Forms.TextBox();
             this.pictureBoxLeft = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.DeleteRight = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
             this.TextBoxRight = new System.Windows.Forms.TextBox();
             this.pictureBoxRight = new System.Windows.Forms.PictureBox();
@@ -53,14 +53,14 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.button4);
+            this.splitContainer1.Panel1.Controls.Add(this.DeleteLeft);
             this.splitContainer1.Panel1.Controls.Add(this.buttonPrevious);
             this.splitContainer1.Panel1.Controls.Add(this.TextBoxLeft);
             this.splitContainer1.Panel1.Controls.Add(this.pictureBoxLeft);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.button2);
+            this.splitContainer1.Panel2.Controls.Add(this.DeleteRight);
             this.splitContainer1.Panel2.Controls.Add(this.buttonNext);
             this.splitContainer1.Panel2.Controls.Add(this.TextBoxRight);
             this.splitContainer1.Panel2.Controls.Add(this.pictureBoxRight);
@@ -69,15 +69,17 @@
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 0;
             // 
-            // button4
+            // DeleteLeft
             // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button4.Location = new System.Drawing.Point(96, 343);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
+            this.DeleteLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DeleteLeft.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.DeleteLeft.Location = new System.Drawing.Point(96, 343);
+            this.DeleteLeft.Name = "DeleteLeft";
+            this.DeleteLeft.Size = new System.Drawing.Size(75, 23);
+            this.DeleteLeft.TabIndex = 6;
+            this.DeleteLeft.Text = "Delete";
+            this.DeleteLeft.UseVisualStyleBackColor = true;
+            this.DeleteLeft.Click += new System.EventHandler(this.DeleteLeft_Click);
             // 
             // buttonPrevious
             // 
@@ -112,21 +114,23 @@
             this.pictureBoxLeft.TabIndex = 0;
             this.pictureBoxLeft.TabStop = false;
             // 
-            // button2
+            // DeleteRight
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(127, 343);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.DeleteRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DeleteRight.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.DeleteRight.Location = new System.Drawing.Point(129, 343);
+            this.DeleteRight.Name = "DeleteRight";
+            this.DeleteRight.Size = new System.Drawing.Size(75, 23);
+            this.DeleteRight.TabIndex = 4;
+            this.DeleteRight.Text = "Delete";
+            this.DeleteRight.UseVisualStyleBackColor = true;
+            this.DeleteRight.Click += new System.EventHandler(this.DeleteRight_Click);
             // 
             // buttonNext
             // 
             this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.buttonNext.Location = new System.Drawing.Point(208, 343);
+            this.buttonNext.Location = new System.Drawing.Point(210, 343);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(87, 23);
             this.buttonNext.TabIndex = 3;
@@ -140,7 +144,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextBoxRight.Location = new System.Drawing.Point(4, 211);
             this.TextBoxRight.Name = "TextBoxRight";
-            this.TextBoxRight.Size = new System.Drawing.Size(291, 20);
+            this.TextBoxRight.Size = new System.Drawing.Size(293, 20);
             this.TextBoxRight.TabIndex = 2;
             // 
             // pictureBoxRight
@@ -150,7 +154,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxRight.Location = new System.Drawing.Point(1, 3);
             this.pictureBoxRight.Name = "pictureBoxRight";
-            this.pictureBoxRight.Size = new System.Drawing.Size(294, 202);
+            this.pictureBoxRight.Size = new System.Drawing.Size(296, 202);
             this.pictureBoxRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxRight.TabIndex = 1;
             this.pictureBoxRight.TabStop = false;
@@ -184,9 +188,9 @@
         private System.Windows.Forms.PictureBox pictureBoxRight;
         private System.Windows.Forms.TextBox TextBoxLeft;
         private System.Windows.Forms.TextBox TextBoxRight;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button DeleteLeft;
         private System.Windows.Forms.Button buttonPrevious;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button DeleteRight;
         private System.Windows.Forms.Button buttonNext;
     }
 }

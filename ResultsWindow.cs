@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 
 namespace RSF
 {
@@ -49,12 +50,12 @@ namespace RSF
                 System.GC.Collect();
             }
 
-            if (RSF.repeatedImages.Count == i) i = 0;
-            if (i == -1) i = RSF.repeatedImages.Count - 1;
+            if (i >= RSF.repeatedImages.Count) i = 0;
+            if (i <= -1) i = RSF.repeatedImages.Count - 1;
 
             try
             {
-                TextBoxLeft.Text = RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString();
+                TextBoxLeft.Text = RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString();  //TODO BITMAP CLASS HAS THUMBNAIL OPTION(using it intsted of normal image[what dimentions it has)
                 Bitmap previewLeft = new Bitmap(Image.FromFile(RSF.repeatedImages[i].path), pictureBoxRight.Size);  //TODO Add bigger reolution for bigger window
                 pictureBoxLeft.Image = previewLeft; //TODO TRY DISPOSING IT OUTSIDE TRY
             }
@@ -76,5 +77,21 @@ namespace RSF
                 pictureBoxRight.Image = Properties.Resources.link_broken;
             }
         }
+
+        private void DeleteLeft_Click(object sender, System.EventArgs e)
+        {
+            int temp = i;
+            i--;
+            imageLoad(null, null);
+            FileSystem.DeleteFile(RSF.repeatedImages[temp].path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+        }
+
+        private void DeleteRight_Click(object sender, System.EventArgs e)
+        {
+            int temp = i;
+            i++;
+            imageLoad(null, null);
+            FileSystem.DeleteFile(RSF.repeatedImages[temp].repeatedWithPath,UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+        } 
     }
 }
