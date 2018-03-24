@@ -21,13 +21,6 @@ namespace RSF
                 return true; //its JPG image
             }
 
-            //if (streamByte[0] == 47 && streamByte[1] == 49
-            //    && streamByte[2] == 46 && streamByte[3] == 38
-            //    && (streamByte[4] == 37 || streamByte[4] == 39) && streamByte[5] == 61)
-            //{
-            //    return true; //its GIF image
-            //}
-
             if (streamByte[0] == 71 && streamByte[1] == 73
                 && streamByte[2] == 70 && streamByte[3] == 56
                 && (streamByte[4] == 57 || streamByte[4] == 55) && streamByte[5] == 97)
@@ -45,8 +38,6 @@ namespace RSF
 
             return false;
         }
-
-        //TODO bufforing bitmaps
 
         bool LoadingJson(string folderName)
         {
@@ -73,7 +64,7 @@ namespace RSF
         void SearchingForFilesWithJson(Array dir)
         {
             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "Images: " + Environment.NewLine; }));
-            for (int i = 0; i < dir.GetLength(0); i++) //Getting all files from directory
+            for (int i = 0; i < dir.GetLength(0); i++) //Gets all files from directory
             {
                 var element = dir.GetValue(i).ToString();
                 var extension = Path.GetExtension(element).ToLower();
@@ -121,18 +112,14 @@ namespace RSF
         void SearchingForFiles(Array dir) //Searching files from drive only
         {
             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "Images: " + Environment.NewLine; }));
-            //Console.WriteLine("Number of elements: " + dir.GetLength(0));
             for (int i = 0; i < dir.GetLength(0); i++)  //TODO TRY DOING THIS ON PARREL FOR WITH LOCKING 
             {
                 var element = dir.GetValue(i).ToString();
                 var extension = Path.GetExtension(element).ToLower();
                 var filename = Path.GetFileName(element);
                 filename = filename.Remove(filename.Length - extension.Length, extension.Length);
-                //Debug.WriteLine(extension);
                 if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg")
                 {
-                    //MemoryStream cache = new MemoryStream(File.ReadAllBytes(dir.GetValue(i+1).ToString()));
-
                     //Checking if file is 0 Bytes
                     long length = new FileInfo(element).Length;
                     if (length == 0)
@@ -177,8 +164,6 @@ namespace RSF
                 int count = imagesList.Count;
                 if (imagesList.Count > 100)
                 {
-                    //imagesList, (currentImage, state)
-
                     Parallel.For(0, count, (k, state) =>
                     {
                         if (k == indexOnImageList) return;
@@ -421,7 +406,7 @@ namespace RSF
 
                     if (Directory.Exists("Json"))
                     {
-                        File.Delete("Json/" + folderName + ".json"); //TODO Add checikng if all files form iamgelist exists (only on readed from json)
+                        File.Delete("Json/" + folderName + ".json");
                         File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None)); // .Indented gives more readable Json file but it take a lot of space 2,22 MB vs 5,18 MB
                     }
 
@@ -433,7 +418,6 @@ namespace RSF
                 }
 
                 GC.Collect();
-
             }
         }
 
