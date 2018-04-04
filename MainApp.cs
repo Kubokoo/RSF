@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Security.Permissions;
 
 namespace RSF
 {
@@ -418,10 +419,64 @@ namespace RSF
                 }
 
                 GC.Collect();
+
+                FileSystemWatcher fw = new FileSystemWatcher(textBoxDirectory.Text);
+                fw.NotifyFilter = NotifyFilters.LastWrite;
+                fw.Filter = "*.*";
+                fw.Changed += new FileSystemEventHandler(FileChanged);
+                fw.EnableRaisingEvents = true;
             }
         }
 
-        private void Results_Click(object sender, EventArgs e) //TODO Watch scanned folder for changes and scan them too
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]  //TODO LIST WITH CAHED IMAGES TO TAKE FOR PROCESSING
+        private void FileChanged(object sender, FileSystemEventArgs e) //TODO MODYFING ORGINAL FUNCTION TO WORK WITH THIS
+        {
+            string element = e.FullPath;
+            var extension = Path.GetExtension(element).ToLower();
+            var filename = Path.GetFileName(element);
+            filename = filename.Remove(filename.Length - extension.Length, extension.Length);
+            if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg")
+            {
+
+                //Checking if file is 0 Bytes
+                long length = new FileInfo(element).Length;
+                if (length == 0)
+                {
+                    File.Delete(element);
+                    return;
+                }
+                //TODO CHECK WHY TEST.zip BREAKS PROGRAM
+                if (CheckingIfIsImage(element))
+                {
+                    if (imagesList.FindIndex(x => x.path.Contains(element)) != -1) //Checks if Image is alredy at imagesList
+                    {
+                        logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
+                        int indexOnImageList = imagesList.FindIndex(x => x.path.Contains(element));
+                        if(comparing(imagesList[indexOnImageList], indexOnImageList))
+                        {
+                            MessageBox.Show("New file that has benn added is repated with other file and has been added to resoults window.");
+                        }
+                    }
+                    else
+                    {
+                        Images image = new Images(filename, extension, element, (int)length, Hash(element), false);
+                        logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
+                        image.imageHash = imageHashing(image.path);
+                        if (comparing(image, -2))
+                        {
+                            MessageBox.Show("New file that has benn added is repated with other file and has been added to resoults window.");  //TODO ADD WINDOWS 10 NOTIFICATION, or normal notification
+                        }
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("This element wants to be image but it isn't (has it's extension): " + element);
+                }
+            }
+        }
+
+        private void Results_Click(object sender, EventArgs e)
         {
             ResultsWindowShow();
         }

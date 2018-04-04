@@ -91,7 +91,15 @@ namespace RSF
             int temp = i;
             i++;
             imageLoad(null, null);
-            FileSystem.DeleteFile(RSF.repeatedImages[temp].repeatedWithPath,UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+            try
+            {
+                FileSystem.DeleteFile(RSF.repeatedImages[temp].repeatedWithPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+            }
+            catch (System.Exception)
+            {
+                MessageBox.Show("File coudn't be removed");
+            }
+            
         } 
     }
 }
