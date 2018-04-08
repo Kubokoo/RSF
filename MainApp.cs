@@ -5,11 +5,14 @@ using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Security.Permissions;
 
 namespace RSF
 {
     public partial class RSF : Form
     {
+        bool minimalizedOnce = false;
+
         bool CheckingIfIsImage(string element)
         {
             byte[] streamByte = new byte[8];
@@ -83,10 +86,10 @@ namespace RSF
 
                     if (CheckingIfIsImage(element))
                     {
-                        if (imagesList.FindIndex(x => x.path.Contains(element)) != -1) //Checking if Image is alredy at imagesList
+                        int indexOnImageList = imagesList.FindIndex(x => x.path.Contains(element));
+                        if (indexOnImageList != -1) //Checking if Image is alredy at imagesList
                         {
                             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
-                            int indexOnImageList = imagesList.FindIndex(x => x.path.Contains(element));
                             comparing(imagesList[indexOnImageList], indexOnImageList);
                         }
                         else
@@ -172,14 +175,7 @@ namespace RSF
                         {
                             if (image.imageHash[i] == imagesList[k].imageHash[i]) comparability++;
                         }
-                        //Parallel.For(0, max, i =>
-                        //{
-                        //    //image.imageHash[i] == imagesList[j].imageHash[i]
-                        //    //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i] //Coś działa ale za dużo powtórzeń (działa dla accurycy 32) (przestawać szukać po znalezeniu powtórki?)
-                        //    if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;  //184,713,810 Porównań lub 369,446,841 Porówań // 78,086
-                        //}); //TODO zprawdzić czy for i parell for dają takie same rezultaty (powtarzające się obrazy)
                         comparability = (comparability / (accuracy * accuracy)) * 100;
-                        //Console.WriteLine(comparability); STRASZNIE SPOWANLNIAWYKONYWANIE KODU 17 sek bez - 1:17 z wypisywaniem //REZERO w 2:24(2:04 z Paraell foreach) //IDK w 2 min
                         if (comparability > 90)
                         {
                             state.Break();
@@ -194,6 +190,7 @@ namespace RSF
                             breakLoop = true;
                         }
                     });
+
                     if (!breakLoop)
                     {
                         if (imagesList.FindIndex(x => x.path.Contains(image.path)) != indexOnImageList)
@@ -418,10 +415,64 @@ namespace RSF
                 }
 
                 GC.Collect();
+
+                FileSystemWatcher fw = new FileSystemWatcher(textBoxDirectory.Text);
+                fw.NotifyFilter = NotifyFilters.LastWrite;
+                fw.Filter = "*.*";
+                fw.Changed += new FileSystemEventHandler(FileChanged);
+                fw.EnableRaisingEvents = true;
             }
         }
 
-        private void Results_Click(object sender, EventArgs e) //TODO Watch scanned folder for changes and scan them too
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]  //TODO LIST WITH CAHED IMAGES TO TAKE FOR PROCESSING
+        private void FileChanged(object sender, FileSystemEventArgs e) //TODO MODYFING ORGINAL FUNCTION TO WORK WITH THIS
+        {
+            string element = e.FullPath;
+            var extension = Path.GetExtension(element).ToLower();
+            var filename = Path.GetFileName(element);
+            filename = filename.Remove(filename.Length - extension.Length, extension.Length);
+            if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg")
+            {
+
+                //Checking if file is 0 Bytes
+                long length = new FileInfo(element).Length;
+                if (length == 0)
+                {
+                    File.Delete(element);
+                    return;
+                }
+                //TODO CHECK WHY TEST.zip BREAKS PROGRAM
+                if (CheckingIfIsImage(element))
+                {
+                    int indexOnImageList = imagesList.FindIndex(x => x.path.Contains(element));
+                    if (indexOnImageList != -1) //Checks if Image is alredy at imagesList
+                    {
+                        logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
+                        if(comparing(imagesList[indexOnImageList], indexOnImageList))
+                        {
+                            NewFileRepeated();
+                        }
+                    }
+                    else
+                    {
+                        Images image = new Images(filename, extension, element, (int)length, Hash(element), false);
+                        logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
+                        image.imageHash = imageHashing(image.path);
+                        if (comparing(image, -2))
+                        {
+                            NewFileRepeated();
+                        }
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("This element wants to be image but it isn't (has it's extension): " + element);
+                }
+            }
+        }
+
+        private void Results_Click(object sender, EventArgs e)
         {
             ResultsWindowShow();
         }
@@ -441,6 +492,37 @@ namespace RSF
                 {
                     logBox.Invoke(new MethodInvoker(delegate { logBox.Text += repeatedImages[i].filename + repeatedImages[i].extension + " -> " + repeatedImages[i].repeatedWith + Environment.NewLine; }));
                 }
+            }
+        }
+
+        private void Window_Minimalize(object sender, EventArgs e) //On minializing window crates tray icon and shows popup on first minimalization
+        {
+            if (FormWindowState.Minimized == WindowState || minimalizedOnce==false)
+            {
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(500, "RSF", "This app will still work in background", ToolTipIcon.Info);
+                Hide();
+                minimalizedOnce = true;
+            }
+            else if (FormWindowState.Normal == WindowState)
+            {
+                notifyIcon.Visible = false;
+                Show();
+            }
+        }
+        
+        private void NewFileRepeated() //Creates new popup window when new filee has benn  marked as repated (by fileWatcher)
+        {
+            if (FormWindowState.Minimized == WindowState)
+            {
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(500, "RSF", "New file that has been added as repeated with other file and has been added to results window.", ToolTipIcon.Info);
+                Hide();
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                notifyIcon.Visible = false;
+                Show();
             }
         }
     }

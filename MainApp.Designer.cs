@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RSF));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxDirectory = new System.Windows.Forms.TextBox();
             this.directory = new System.Windows.Forms.Label();
@@ -36,6 +38,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.start = new System.Windows.Forms.Button();
             this.Results = new System.Windows.Forms.Button();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -153,6 +156,13 @@
             this.Results.UseVisualStyleBackColor = true;
             this.Results.Click += new System.EventHandler(this.Results_Click);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "notifyIcon1";
+            this.notifyIcon.Visible = true;
+            // 
             // RSF
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -160,9 +170,11 @@
             this.ClientSize = new System.Drawing.Size(520, 220);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(536, 259);
             this.Name = "RSF";
             this.Text = "RSF";
+            this.Resize += new System.EventHandler(this.Window_Minimalize);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -181,6 +193,7 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button start;
         private System.Windows.Forms.Button Results;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 
