@@ -230,6 +230,8 @@
     <Content Include="log.txt" />
     <Content Include="Próby, pomiary.txt" />
     <None Include="Resources\link_broken.png" />
+    <None Include="Resources\RSF_Icon.png" />
+    <None Include="Resources\RSF_Icon_Icon.ico" />
     <Content Include="Tests.txt" />
   </ItemGroup>
   <ItemGroup>
