@@ -30,60 +30,21 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RSF));
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBoxDirectory = new System.Windows.Forms.TextBox();
-            this.directory = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.logBox = new System.Windows.Forms.RichTextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.start = new System.Windows.Forms.Button();
             this.Results = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.tableLayoutPanel1.SuspendLayout();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.textBoxDirectory = new System.Windows.Forms.RichTextBox();
+            this.path = new System.Windows.Forms.Label();
+            this.appToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel2.SuspendLayout();
+            this.menuStrip.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.textBoxDirectory, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.directory, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(13, 4);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(498, 35);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // textBoxDirectory
-            // 
-            this.textBoxDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDirectory.Font = new System.Drawing.Font("Georgia", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.textBoxDirectory.Location = new System.Drawing.Point(132, 3);
-            this.textBoxDirectory.Name = "textBoxDirectory";
-            this.textBoxDirectory.Size = new System.Drawing.Size(363, 29);
-            this.textBoxDirectory.TabIndex = 1;
-            // 
-            // directory
-            // 
-            this.directory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.directory.AutoSize = true;
-            this.directory.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.directory.Location = new System.Drawing.Point(3, 0);
-            this.directory.Name = "directory";
-            this.directory.Size = new System.Drawing.Size(123, 35);
-            this.directory.TabIndex = 0;
-            this.directory.Text = "Directory:";
             // 
             // tableLayoutPanel2
             // 
@@ -98,13 +59,13 @@
             this.tableLayoutPanel2.Controls.Add(this.progressBar1, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.start, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.Results, 2, 2);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(13, 46);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(13, 68);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(498, 162);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(498, 153);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // logBox
@@ -118,7 +79,7 @@
             this.logBox.Location = new System.Drawing.Point(3, 3);
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
-            this.logBox.Size = new System.Drawing.Size(492, 95);
+            this.logBox.Size = new System.Drawing.Size(492, 86);
             this.logBox.TabIndex = 2;
             this.logBox.Text = "";
             // 
@@ -127,16 +88,15 @@
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel2.SetColumnSpan(this.progressBar1, 3);
-            this.progressBar1.Location = new System.Drawing.Point(3, 104);
+            this.progressBar1.Location = new System.Drawing.Point(3, 95);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(492, 19);
             this.progressBar1.TabIndex = 3;
             // 
             // start
             // 
-            this.start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.start.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold);
-            this.start.Location = new System.Drawing.Point(3, 129);
+            this.start.Location = new System.Drawing.Point(3, 120);
             this.start.Name = "start";
             this.start.Size = new System.Drawing.Size(161, 30);
             this.start.TabIndex = 1;
@@ -148,7 +108,7 @@
             // 
             this.Results.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Results.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold);
-            this.Results.Location = new System.Drawing.Point(335, 129);
+            this.Results.Location = new System.Drawing.Point(335, 120);
             this.Results.Name = "Results";
             this.Results.Size = new System.Drawing.Size(160, 30);
             this.Results.TabIndex = 4;
@@ -163,37 +123,100 @@
             this.notifyIcon.Text = "notifyIcon1";
             this.notifyIcon.Visible = true;
             // 
+            // menuStrip
+            // 
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.appToolStripMenuItem});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(520, 24);
+            this.menuStrip.TabIndex = 2;
+            this.menuStrip.Text = "menuStrip1";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.Control;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
+            this.tableLayoutPanel1.Controls.Add(this.textBoxDirectory, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.path, 0, 0);
+            this.tableLayoutPanel1.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(16, 27);
+            this.tableLayoutPanel1.MaximumSize = new System.Drawing.Size(0, 35);
+            this.tableLayoutPanel1.MinimumSize = new System.Drawing.Size(495, 35);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(495, 35);
+            this.tableLayoutPanel1.TabIndex = 3;
+            // 
+            // textBoxDirectory
+            // 
+            this.textBoxDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDirectory.Location = new System.Drawing.Point(102, 3);
+            this.textBoxDirectory.Name = "textBoxDirectory";
+            this.textBoxDirectory.Size = new System.Drawing.Size(390, 29);
+            this.textBoxDirectory.TabIndex = 0;
+            this.textBoxDirectory.Text = "";
+            // 
+            // path
+            // 
+            this.path.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.path.AutoSize = true;
+            this.path.Font = new System.Drawing.Font("Georgia", 20F, System.Drawing.FontStyle.Bold);
+            this.path.Location = new System.Drawing.Point(3, 0);
+            this.path.Name = "path";
+            this.path.Size = new System.Drawing.Size(93, 31);
+            this.path.TabIndex = 1;
+            this.path.Text = "Path:";
+            // 
+            // appToolStripMenuItem
+            // 
+            this.appToolStripMenuItem.Name = "appToolStripMenuItem";
+            this.appToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.appToolStripMenuItem.Text = "App";
+            // 
             // RSF
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(520, 220);
-            this.Controls.Add(this.tableLayoutPanel2);
+            this.ClientSize = new System.Drawing.Size(520, 233);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.tableLayoutPanel2);
+            this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(536, 259);
             this.Name = "RSF";
             this.Text = "RSF";
             this.Resize += new System.EventHandler(this.Window_Minimalize);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label directory;
-        private System.Windows.Forms.TextBox textBoxDirectory;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.RichTextBox logBox;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button start;
         private System.Windows.Forms.Button Results;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.RichTextBox textBoxDirectory;
+        private System.Windows.Forms.Label path;
+        private System.Windows.Forms.ToolStripMenuItem appToolStripMenuItem;
     }
 }
 

@@ -326,7 +326,6 @@ namespace RSF
                 progressBar1.Maximum = dir.Length + 1;
 
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
-                //logBox.Font = normal;
 
                 //Checking if json file is 0 bytes
                 if (File.Exists("Json/" + folderName + ".json"))
@@ -497,12 +496,15 @@ namespace RSF
 
         private void Window_Minimalize(object sender, EventArgs e) //On minializing window crates tray icon and shows popup on first minimalization
         {
-            if (FormWindowState.Minimized == WindowState || minimalizedOnce==false)
+            if (FormWindowState.Minimized == WindowState)
             {
-                notifyIcon.Visible = true;
-                notifyIcon.ShowBalloonTip(500, "RSF", "This app will still work in background", ToolTipIcon.Info);
-                Hide();
-                minimalizedOnce = true;
+                if(minimalizedOnce == false)
+                {
+                    notifyIcon.Visible = true;
+                    notifyIcon.ShowBalloonTip(500, "RSF", "This app will still work in background", ToolTipIcon.Info);
+                    Hide();
+                    minimalizedOnce = true;
+                }
             }
             else if (FormWindowState.Normal == WindowState)
             {
