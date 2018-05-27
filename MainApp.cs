@@ -494,22 +494,24 @@ namespace RSF
             }
         }
 
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e) //For restring window from being minimalized
+        {
+            notifyIcon.Visible = false;
+            Show();
+        }
+
+
         private void Window_Minimalize(object sender, EventArgs e) //On minializing window crates tray icon and shows popup on first minimalization
         {
             if (FormWindowState.Minimized == WindowState)
             {
-                if(minimalizedOnce == false)
+                notifyIcon.Visible = true;
+                Hide();
+                if (minimalizedOnce == false)
                 {
-                    notifyIcon.Visible = true;
                     notifyIcon.ShowBalloonTip(500, "RSF", "This app will still work in background", ToolTipIcon.Info);
-                    Hide();
                     minimalizedOnce = true;
                 }
-            }
-            else if (FormWindowState.Normal == WindowState)
-            {
-                notifyIcon.Visible = false;
-                Show();
             }
         }
         
@@ -527,6 +529,8 @@ namespace RSF
                 Show();
             }
         }
+
+
     }
 
     public class Images
