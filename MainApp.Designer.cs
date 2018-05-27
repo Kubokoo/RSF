@@ -37,10 +37,10 @@
             this.Results = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.appToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxDirectory = new System.Windows.Forms.RichTextBox();
             this.path = new System.Windows.Forms.Label();
-            this.appToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel2.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -122,6 +122,7 @@
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "notifyIcon1";
             this.notifyIcon.Visible = true;
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
             // menuStrip
             // 
@@ -132,6 +133,12 @@
             this.menuStrip.Size = new System.Drawing.Size(520, 24);
             this.menuStrip.TabIndex = 2;
             this.menuStrip.Text = "menuStrip1";
+            // 
+            // appToolStripMenuItem
+            // 
+            this.appToolStripMenuItem.Name = "appToolStripMenuItem";
+            this.appToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.appToolStripMenuItem.Text = "App";
             // 
             // tableLayoutPanel1
             // 
@@ -174,12 +181,6 @@
             this.path.Size = new System.Drawing.Size(93, 31);
             this.path.TabIndex = 1;
             this.path.Text = "Path:";
-            // 
-            // appToolStripMenuItem
-            // 
-            this.appToolStripMenuItem.Name = "appToolStripMenuItem";
-            this.appToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
-            this.appToolStripMenuItem.Text = "App";
             // 
             // RSF
             // 
