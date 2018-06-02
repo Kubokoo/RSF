@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Security.Permissions;
+using System.Linq;
 
 namespace RSF
 {
@@ -339,13 +340,10 @@ namespace RSF
 
                 if (LoadingJson(folderName))
                 {
-                    Parallel.ForEach(imagesList, (currentImage) =>
-                    {
-                        if (!File.Exists(currentImage.path))
-                        {
-                            imagesList.Remove(currentImage);
-                        }
-                    });
+                    var TempImageList = imagesList.AsParallel() //Parallel removing non existing files from list
+                        .Where(f => File.Exists(f.path))
+                        .ToList();
+                    imagesList = TempImageList;
 
                     try
                     {
@@ -354,7 +352,7 @@ namespace RSF
                     catch (Exception ex)
                     {
                         Console.Write(ex.ToString());
-                        Console.WriteLine(ex.InnerException);
+                        logBox.Text += ex.ToString();
                     }
                 }
                 else
@@ -366,12 +364,12 @@ namespace RSF
                     catch (Exception ex)
                     {
                         Console.Write(ex.ToString());
-                        Console.WriteLine(ex.InnerException);
+                        logBox.Text += ex.ToString();
                     }
                 }
 
                 //DISPLAING REAPATED FILES
-                if (repetings == true)  //TODO CACHE ALL FILE AND THEN PROCESS THEM
+                if (repetings == true)
                 {
                     try
                     {
@@ -380,7 +378,7 @@ namespace RSF
                     catch (Exception ex)
                     {
                         Console.Write(ex.ToString());
-                        Console.WriteLine(ex.InnerException);
+                        logBox.Text += ex.ToString();
                     }
 
                     ResultsWindowShow();
@@ -393,6 +391,7 @@ namespace RSF
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
+                    logBox.Text += ex.ToString();
                     throw;
                 }
                 
@@ -498,6 +497,7 @@ namespace RSF
         {
             notifyIcon.Visible = false;
             Show();
+            WindowState = FormWindowState.Normal;
         }
 
 
@@ -528,6 +528,12 @@ namespace RSF
                 notifyIcon.Visible = false;
                 Show();
             }
+        }
+
+        private void logBox_TextChanged(object sender, EventArgs e) //Auto scroll on new text
+        {
+            logBox.SelectionStart = logBox.Text.Length;
+            logBox.ScrollToCaret();
         }
 
 

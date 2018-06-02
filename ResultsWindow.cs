@@ -61,7 +61,7 @@ namespace RSF
             }
             catch (IOException)
             {
-                MessageBox.Show("This file no longer exists: " + RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString());
+                notifyIcon1.ShowBalloonTip(400, "RSF", "This file no longer exists: " + RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString(), ToolTipIcon.Info);
                 pictureBoxLeft.Image = Properties.Resources.link_broken;
             }
 

@@ -65,7 +65,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(498, 153);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(498, 214);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // logBox
@@ -79,16 +79,17 @@
             this.logBox.Location = new System.Drawing.Point(3, 3);
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
-            this.logBox.Size = new System.Drawing.Size(492, 86);
+            this.logBox.Size = new System.Drawing.Size(492, 147);
             this.logBox.TabIndex = 2;
             this.logBox.Text = "";
+            this.logBox.TextChanged += new System.EventHandler(this.logBox_TextChanged);
             // 
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel2.SetColumnSpan(this.progressBar1, 3);
-            this.progressBar1.Location = new System.Drawing.Point(3, 95);
+            this.progressBar1.Location = new System.Drawing.Point(3, 156);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(492, 19);
             this.progressBar1.TabIndex = 3;
@@ -96,7 +97,7 @@
             // start
             // 
             this.start.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold);
-            this.start.Location = new System.Drawing.Point(3, 120);
+            this.start.Location = new System.Drawing.Point(3, 181);
             this.start.Name = "start";
             this.start.Size = new System.Drawing.Size(161, 30);
             this.start.TabIndex = 1;
@@ -108,7 +109,7 @@
             // 
             this.Results.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Results.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Bold);
-            this.Results.Location = new System.Drawing.Point(335, 120);
+            this.Results.Location = new System.Drawing.Point(335, 181);
             this.Results.Name = "Results";
             this.Results.Size = new System.Drawing.Size(160, 30);
             this.Results.TabIndex = 4;
@@ -120,7 +121,7 @@
             // 
             this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "notifyIcon1";
+            this.notifyIcon.Text = "RSF";
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
@@ -186,7 +187,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(520, 233);
+            this.ClientSize = new System.Drawing.Size(520, 294);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.menuStrip);
