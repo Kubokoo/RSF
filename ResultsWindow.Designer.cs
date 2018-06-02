@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DeleteLeft = new System.Windows.Forms.Button();
             this.buttonPrevious = new System.Windows.Forms.Button();
@@ -37,6 +38,7 @@
             this.buttonNext = new System.Windows.Forms.Button();
             this.TextBoxRight = new System.Windows.Forms.TextBox();
             this.pictureBoxRight = new System.Windows.Forms.PictureBox();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -118,7 +120,7 @@
             // 
             this.DeleteRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DeleteRight.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.DeleteRight.Location = new System.Drawing.Point(129, 343);
+            this.DeleteRight.Location = new System.Drawing.Point(131, 343);
             this.DeleteRight.Name = "DeleteRight";
             this.DeleteRight.Size = new System.Drawing.Size(75, 23);
             this.DeleteRight.TabIndex = 4;
@@ -130,7 +132,7 @@
             // 
             this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.buttonNext.Location = new System.Drawing.Point(210, 343);
+            this.buttonNext.Location = new System.Drawing.Point(212, 343);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(87, 23);
             this.buttonNext.TabIndex = 3;
@@ -144,7 +146,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextBoxRight.Location = new System.Drawing.Point(4, 211);
             this.TextBoxRight.Name = "TextBoxRight";
-            this.TextBoxRight.Size = new System.Drawing.Size(293, 20);
+            this.TextBoxRight.Size = new System.Drawing.Size(295, 20);
             this.TextBoxRight.TabIndex = 2;
             // 
             // pictureBoxRight
@@ -154,10 +156,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxRight.Location = new System.Drawing.Point(1, 3);
             this.pictureBoxRight.Name = "pictureBoxRight";
-            this.pictureBoxRight.Size = new System.Drawing.Size(296, 202);
+            this.pictureBoxRight.Size = new System.Drawing.Size(298, 202);
             this.pictureBoxRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxRight.TabIndex = 1;
             this.pictureBoxRight.TabStop = false;
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
             // 
             // ResultsWindow
             // 
@@ -192,5 +199,6 @@
         private System.Windows.Forms.Button buttonPrevious;
         private System.Windows.Forms.Button DeleteRight;
         private System.Windows.Forms.Button buttonNext;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
