@@ -172,6 +172,7 @@ namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co o
                     {
                         if (k == indexOnImageList) return;
                         int comparability = 0;
+                        if (imagesList[k].path == image.path) return;
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
                             if (image.imageHash[i] == imagesList[k].imageHash[i]) comparability++;
@@ -478,6 +479,7 @@ namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co o
         {
             ResultsWindow window = new ResultsWindow();
             window.Show();
+            imagesList = null;
         }
 
         void ShowingRepeatedElements()
