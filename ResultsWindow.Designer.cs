@@ -39,6 +39,9 @@
             this.TextBoxRight = new System.Windows.Forms.TextBox();
             this.pictureBoxRight = new System.Windows.Forms.PictureBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.SizeRight = new System.Windows.Forms.Label();
+            this.sizeLeft = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -55,6 +58,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.sizeLeft);
             this.splitContainer1.Panel1.Controls.Add(this.DeleteLeft);
             this.splitContainer1.Panel1.Controls.Add(this.buttonPrevious);
             this.splitContainer1.Panel1.Controls.Add(this.TextBoxLeft);
@@ -62,6 +66,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.SizeRight);
             this.splitContainer1.Panel2.Controls.Add(this.DeleteRight);
             this.splitContainer1.Panel2.Controls.Add(this.buttonNext);
             this.splitContainer1.Panel2.Controls.Add(this.TextBoxRight);
@@ -120,7 +125,7 @@
             // 
             this.DeleteRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DeleteRight.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.DeleteRight.Location = new System.Drawing.Point(131, 343);
+            this.DeleteRight.Location = new System.Drawing.Point(133, 343);
             this.DeleteRight.Name = "DeleteRight";
             this.DeleteRight.Size = new System.Drawing.Size(75, 23);
             this.DeleteRight.TabIndex = 4;
@@ -132,7 +137,7 @@
             // 
             this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.buttonNext.Location = new System.Drawing.Point(212, 343);
+            this.buttonNext.Location = new System.Drawing.Point(214, 343);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(87, 23);
             this.buttonNext.TabIndex = 3;
@@ -146,7 +151,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextBoxRight.Location = new System.Drawing.Point(4, 211);
             this.TextBoxRight.Name = "TextBoxRight";
-            this.TextBoxRight.Size = new System.Drawing.Size(295, 20);
+            this.TextBoxRight.Size = new System.Drawing.Size(297, 20);
             this.TextBoxRight.TabIndex = 2;
             // 
             // pictureBoxRight
@@ -156,7 +161,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxRight.Location = new System.Drawing.Point(1, 3);
             this.pictureBoxRight.Name = "pictureBoxRight";
-            this.pictureBoxRight.Size = new System.Drawing.Size(298, 202);
+            this.pictureBoxRight.Size = new System.Drawing.Size(300, 202);
             this.pictureBoxRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxRight.TabIndex = 1;
             this.pictureBoxRight.TabStop = false;
@@ -165,6 +170,28 @@
             // 
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.Visible = true;
+            // 
+            // SizeRight
+            // 
+            this.SizeRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.SizeRight.AutoSize = true;
+            this.SizeRight.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.SizeRight.Location = new System.Drawing.Point(4, 238);
+            this.SizeRight.Name = "SizeRight";
+            this.SizeRight.Size = new System.Drawing.Size(35, 13);
+            this.SizeRight.TabIndex = 5;
+            this.SizeRight.Text = "Size:";
+            // 
+            // sizeLeft
+            // 
+            this.sizeLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.sizeLeft.AutoSize = true;
+            this.sizeLeft.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.sizeLeft.Location = new System.Drawing.Point(3, 238);
+            this.sizeLeft.Name = "sizeLeft";
+            this.sizeLeft.Size = new System.Drawing.Size(39, 13);
+            this.sizeLeft.TabIndex = 6;
+            this.sizeLeft.Text = "Size: ";
             // 
             // ResultsWindow
             // 
@@ -200,5 +227,8 @@
         private System.Windows.Forms.Button DeleteRight;
         private System.Windows.Forms.Button buttonNext;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.Label sizeLeft;
+        private System.Windows.Forms.Label SizeRight;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

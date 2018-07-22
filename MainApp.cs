@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Security.Permissions;
 using System.Linq;
 
-namespace RSF
+namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co obecny plik ( przy porównywaniu z listą )
 {
     public partial class RSF : Form
     {
@@ -45,9 +45,9 @@ namespace RSF
 
         bool LoadingJson(string folderName)
         {
-            if (File.Exists("Json/" + folderName + ".json"))
+            if (File.Exists("Json/" + "database" + ".json"))
             {
-                var reader = File.ReadAllBytes("Json/" + folderName + ".json");
+                var reader = File.ReadAllBytes("Json/" + "database" + ".json");
                 string result = System.Text.Encoding.UTF8.GetString(reader);
                 try
                 {
@@ -282,7 +282,6 @@ namespace RSF
             repetings = false;
         }
 
-        //TODO .json, how to get subfolders
 
         public RSF()
         {
@@ -329,16 +328,16 @@ namespace RSF
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
 
                 //Checking if json file is 0 bytes
-                if (File.Exists("Json/" + folderName + ".json"))
+                if (File.Exists("Json/" + "database" + ".json"))
                 {
-                    long length = new FileInfo("Json/" + folderName + ".json").Length;
+                    long length = new FileInfo("Json/" + "database" + ".json").Length;
                     if (length == 0)
                     {
-                        File.Delete("Json/" + folderName + ".json");
+                        File.Delete("Json/" + "database" + ".json");
                     }
                 }
 
-                if (LoadingJson(folderName))
+                if (LoadingJson("database"))
                 {
                     var TempImageList = imagesList.AsParallel() //Parallel removing non existing files from list
                         .Where(f => File.Exists(f.path))
@@ -402,13 +401,13 @@ namespace RSF
                     if (Directory.Exists("Json"))
                     {
                         File.Delete("Json/" + folderName + ".json");
-                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None)); // .Indented gives more readable Json file but it take a lot of space 2,22 MB vs 5,18 MB
+                        File.WriteAllText("Json/" + "database" + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None)); // .Indented gives more readable Json file but it take a lot of space 2,22 MB vs 5,18 MB
                     }
 
                     else
                     {
                         Directory.CreateDirectory("Json");
-                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None));
+                        File.WriteAllText("Json/" + "database" + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None));
                     }
                 }
 
