@@ -479,7 +479,6 @@ namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co o
         {
             ResultsWindow window = new ResultsWindow();
             window.Show();
-            imagesList = null;
         }
 
         void ShowingRepeatedElements()
