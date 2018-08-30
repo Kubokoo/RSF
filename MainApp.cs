@@ -282,7 +282,6 @@ namespace RSF
             repetings = false;
         }
 
-        //TODO .json, how to get subfolders
 
         public RSF()
         {
