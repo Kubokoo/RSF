@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Security.Permissions;
 using System.Linq;
 
-namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co obecny plik ( przy porównywaniu z listą )
+namespace RSF
 {
     public partial class RSF : Form
     {
@@ -45,9 +45,9 @@ namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co o
 
         bool LoadingJson(string folderName)
         {
-            if (File.Exists("Json/" + "database" + ".json"))
+            if (File.Exists("Json/" + folderName + ".json"))
             {
-                var reader = File.ReadAllBytes("Json/" + "database" + ".json");
+                var reader = File.ReadAllBytes("Json/" + folderName + ".json");
                 string result = System.Text.Encoding.UTF8.GetString(reader);
                 try
                 {
@@ -172,7 +172,6 @@ namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co o
                     {
                         if (k == indexOnImageList) return;
                         int comparability = 0;
-                        if (imagesList[k].path == image.path) return;
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
                             if (image.imageHash[i] == imagesList[k].imageHash[i]) comparability++;
@@ -329,16 +328,16 @@ namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co o
                 logBox.Text += "Number of elements: " + dir.GetLength(0) + Environment.NewLine + Environment.NewLine;
 
                 //Checking if json file is 0 bytes
-                if (File.Exists("Json/" + "database" + ".json"))
+                if (File.Exists("Json/" + folderName + ".json"))
                 {
-                    long length = new FileInfo("Json/" + "database" + ".json").Length;
+                    long length = new FileInfo("Json/" + folderName + ".json").Length;
                     if (length == 0)
                     {
-                        File.Delete("Json/" + "database" + ".json");
+                        File.Delete("Json/" + folderName + ".json");
                     }
                 }
 
-                if (LoadingJson("database"))
+                if (LoadingJson(folderName))
                 {
                     var TempImageList = imagesList.AsParallel() //Parallel removing non existing files from list
                         .Where(f => File.Exists(f.path))
@@ -402,13 +401,13 @@ namespace RSF //TODO Sprawdzić czy plik porównywany jest w tym samolderze co o
                     if (Directory.Exists("Json"))
                     {
                         File.Delete("Json/" + folderName + ".json");
-                        File.WriteAllText("Json/" + "database" + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None)); // .Indented gives more readable Json file but it take a lot of space 2,22 MB vs 5,18 MB
+                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None)); // .Indented gives more readable Json file but it take a lot of space 2,22 MB vs 5,18 MB
                     }
 
                     else
                     {
                         Directory.CreateDirectory("Json");
-                        File.WriteAllText("Json/" + "database" + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None));
+                        File.WriteAllText("Json/" + folderName + ".json", JsonConvert.SerializeObject(imagesList, Formatting.None));
                     }
                 }
 

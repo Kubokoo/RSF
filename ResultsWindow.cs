@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
+using System.Diagnostics;
 
 namespace RSF
 {
@@ -56,7 +57,7 @@ namespace RSF
             try
             {
                 TextBoxLeft.Text = RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString();  //TODO BITMAP CLASS HAS THUMBNAIL OPTION(using it intsted of normal image[what dimentions it has)
-                Bitmap previewLeft = new Bitmap(Image.FromFile(RSF.repeatedImages[i].path), pictureBoxRight.Size);  //TODO Add bigger reolution for bigger window
+                Bitmap previewLeft = new Bitmap(Image.FromFile(RSF.repeatedImages[i].path), pictureBoxRight.Size);
                 pictureBoxLeft.Image = previewLeft; //TODO TRY DISPOSING IT OUTSIDE TRY
             }
             catch (IOException)
@@ -113,6 +114,25 @@ namespace RSF
                 MessageBox.Show("File coudn't be removed");
             }
             
-        } 
+        }
+
+        private void openFolder(string file)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.Arguments = "/select," + file;
+            startInfo.FileName = "explorer.exe";
+
+            Process.Start(startInfo);
+        }
+
+        private void pictureBoxLeft_Click(object sender, System.EventArgs e)
+        {
+            openFolder(RSF.repeatedImages[i].path);
+        }
+
+        private void pictureBoxRight_Click(object sender, System.EventArgs e)
+        {
+            openFolder(RSF.repeatedImages[i].repeatedWithPath);
+        }
     }
 }
