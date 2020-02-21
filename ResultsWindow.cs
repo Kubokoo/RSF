@@ -14,8 +14,6 @@ namespace RSF
             if(RSF.repeatedImages.Count == 0)   //USED WHEN NO REPATED IMAGES ARE AVALIABLE
             {
                 MessageBox.Show("There's no repeated images to show.");
-                pictureBoxRight.Image = Properties.Resources.link_broken;
-                pictureBoxLeft.Image = Properties.Resources.link_broken;
                 return;
             }
 
@@ -55,26 +53,38 @@ namespace RSF
 
             try
             {
-                TextBoxLeft.Text = RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString();  //TODO BITMAP CLASS HAS THUMBNAIL OPTION(using it intsted of normal image[what dimentions it has)
-                Bitmap previewLeft = new Bitmap(Image.FromFile(RSF.repeatedImages[i].path), pictureBoxRight.Size);  //TODO Add bigger reolution for bigger window
-                pictureBoxLeft.Image = previewLeft; //TODO TRY DISPOSING IT OUTSIDE TRY
+                if (RSF.repeatedImages[i].notFoundGUI)
+                {
+                    noFile(RSF.repeatedImages[i].filename + RSF.repeatedImages[i].extension, false, RSF.repeatedImages[i].notFoundGUI);
+                }
+                else
+                {
+                    TextBoxLeft.Text = RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString();  //TODO BITMAP CLASS HAS THUMBNAIL OPTION(using it intsted of normal image[what dimentions it has)
+                    textBoxSizeLeft.Text = RSF.repeatedImages[i].size.ToString();
+                    pictureBoxLeft.Image = new Bitmap(Image.FromFile(RSF.repeatedImages[i].path), pictureBoxRight.Size); //TODO TRY DISPOSING IT OUTSIDE TRY
+                }
             }
             catch (IOException)
             {
-                notifyIcon1.ShowBalloonTip(400, "RSF", "This file no longer exists: " + RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString(), ToolTipIcon.Info);
-                pictureBoxLeft.Image = Properties.Resources.link_broken;
+                noFile(RSF.repeatedImages[i].filename + RSF.repeatedImages[i].extension, false, RSF.repeatedImages[i].notFoundGUI);
             }
 
             try
             {
-                TextBoxRight.Text = RSF.repeatedImages[i].repeatedWith.ToString();
-                Bitmap previewRight = new Bitmap(Image.FromFile(RSF.repeatedImages[i].repeatedWithPath), pictureBoxLeft.Size); //TODO ADD PROPER RESIVE OF FIELDS WITH IMAGES
-                pictureBoxRight.Image = previewRight;
+                if (RSF.repeatedImages[i].repeatedNotFoundGUI)
+                {
+                    noFile(RSF.repeatedImages[i].repeatedWith, false, RSF.repeatedImages[i].repeatedNotFoundGUI);
+                }
+                else
+                {
+                    TextBoxRight.Text = RSF.repeatedImages[i].repeatedWith.ToString();
+                    textBoxSizeRight.Text = RSF.repeatedImages[i].repeatedBigger.ToString();
+                    pictureBoxRight.Image = new Bitmap(Image.FromFile(RSF.repeatedImages[i].repeatedWithPath), pictureBoxLeft.Size);
+                }
             }
             catch (IOException)
             {
-                MessageBox.Show("This file no longer exists" + RSF.repeatedImages[i].repeatedWith.ToString());
-                pictureBoxRight.Image = Properties.Resources.link_broken;
+                noFile(RSF.repeatedImages[i].repeatedWith, false, RSF.repeatedImages[i].repeatedNotFoundGUI);
             }
         }
 
@@ -101,5 +111,20 @@ namespace RSF
             }
             
         } 
+
+        private void noFile(string fileName, bool orginalFile, bool notFound)
+        {
+            MessageBox.Show("This file no longer exists" + fileName);
+            if (orginalFile && !notFound)
+            {
+                pictureBoxLeft.Image = Properties.Resources.link_broken;
+                RSF.repeatedImages[i].notFoundGUI = true;
+            }
+            if (!orginalFile && !notFound)
+            {
+                pictureBoxRight.Image = Properties.Resources.link_broken;
+                RSF.repeatedImages[i].repeatedNotFoundGUI = true;
+            }
+        }
     }
 }

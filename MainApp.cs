@@ -13,6 +13,21 @@ namespace RSF
     public partial class RSF : Form
     {
         bool minimalizedOnce = false;
+        ResultsWindow newWindow;
+        //public bool closeWindow
+        //{
+        //    get
+        //    {
+        //        return closeWindow;
+        //    }
+        //    set
+        //    {
+        //        if (value)
+        //        {
+        //            newWindow.Close();
+        //        }
+        //    }
+        //}
 
         bool CheckingIfIsImage(string element)
         {
@@ -211,8 +226,6 @@ namespace RSF
                         for (int i = 0; i < accuracy * accuracy; i++)
                         {
                             if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;
-                            //image.imageHash[i] == imagesList[j].imageHash[i]
-                            //imagesList[j].imageHash[i] == imagesList[j - 1].imageHash[i]
                         }
                         comparability = (comparability / (accuracy * accuracy)) * 100;
                         if (comparability > 90)
@@ -461,7 +474,6 @@ namespace RSF
                             NewFileRepeated();
                         }
                     }
-
                 }
                 else
                 {
@@ -475,10 +487,10 @@ namespace RSF
             ResultsWindowShow();
         }
 
-        void ResultsWindowShow()
+        private void ResultsWindowShow()
         {
-            ResultsWindow window = new ResultsWindow();
-            window.Show();
+            newWindow = new ResultsWindow();
+            newWindow.Show();
         }
 
         void ShowingRepeatedElements()
@@ -536,7 +548,6 @@ namespace RSF
             logBox.ScrollToCaret();
         }
 
-
     }
 
     public class Images
@@ -548,6 +559,8 @@ namespace RSF
         public string hash;
         public bool[] imageHash;
         public string repeatedWith;
+        public bool notFoundGUI;
+        public bool repeatedNotFoundGUI;
 
         [JsonConstructor]
         public Images(string _filename, string _extension, string _path, int _size, string _hash, bool _repeatedBigger)
@@ -558,6 +571,8 @@ namespace RSF
             size = _size;
             hash = _hash;
             repeatedBigger = _repeatedBigger;
+            notFoundGUI = false;
+            repeatedNotFoundGUI = false;
         }
 
         public Images(bool[] _imageHash)

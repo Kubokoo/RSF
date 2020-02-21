@@ -30,10 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.SizeLeftLabel = new System.Windows.Forms.Label();
+            this.textBoxSizeLeft = new System.Windows.Forms.TextBox();
             this.DeleteLeft = new System.Windows.Forms.Button();
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.TextBoxLeft = new System.Windows.Forms.TextBox();
             this.pictureBoxLeft = new System.Windows.Forms.PictureBox();
+            this.SizeRightLabel = new System.Windows.Forms.Label();
+            this.textBoxSizeRight = new System.Windows.Forms.TextBox();
             this.DeleteRight = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
             this.TextBoxRight = new System.Windows.Forms.TextBox();
@@ -55,6 +59,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.SizeLeftLabel);
+            this.splitContainer1.Panel1.Controls.Add(this.textBoxSizeLeft);
             this.splitContainer1.Panel1.Controls.Add(this.DeleteLeft);
             this.splitContainer1.Panel1.Controls.Add(this.buttonPrevious);
             this.splitContainer1.Panel1.Controls.Add(this.TextBoxLeft);
@@ -62,6 +68,8 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.SizeRightLabel);
+            this.splitContainer1.Panel2.Controls.Add(this.textBoxSizeRight);
             this.splitContainer1.Panel2.Controls.Add(this.DeleteRight);
             this.splitContainer1.Panel2.Controls.Add(this.buttonNext);
             this.splitContainer1.Panel2.Controls.Add(this.TextBoxRight);
@@ -70,6 +78,28 @@
             this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // SizeLeftLabel
+            // 
+            this.SizeLeftLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SizeLeftLabel.AutoSize = true;
+            this.SizeLeftLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.SizeLeftLabel.Location = new System.Drawing.Point(3, 238);
+            this.SizeLeftLabel.Name = "SizeLeftLabel";
+            this.SizeLeftLabel.Size = new System.Drawing.Size(31, 13);
+            this.SizeLeftLabel.TabIndex = 8;
+            this.SizeLeftLabel.Text = "Size";
+            // 
+            // textBoxSizeLeft
+            // 
+            this.textBoxSizeLeft.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSizeLeft.Location = new System.Drawing.Point(40, 237);
+            this.textBoxSizeLeft.Name = "textBoxSizeLeft";
+            this.textBoxSizeLeft.ReadOnly = true;
+            this.textBoxSizeLeft.Size = new System.Drawing.Size(257, 20);
+            this.textBoxSizeLeft.TabIndex = 7;
             // 
             // DeleteLeft
             // 
@@ -101,6 +131,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextBoxLeft.Location = new System.Drawing.Point(3, 211);
             this.TextBoxLeft.Name = "TextBoxLeft";
+            this.TextBoxLeft.ReadOnly = true;
             this.TextBoxLeft.Size = new System.Drawing.Size(294, 20);
             this.TextBoxLeft.TabIndex = 1;
             // 
@@ -116,11 +147,33 @@
             this.pictureBoxLeft.TabIndex = 0;
             this.pictureBoxLeft.TabStop = false;
             // 
+            // SizeRightLabel
+            // 
+            this.SizeRightLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SizeRightLabel.AutoSize = true;
+            this.SizeRightLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.SizeRightLabel.Location = new System.Drawing.Point(4, 237);
+            this.SizeRightLabel.Name = "SizeRightLabel";
+            this.SizeRightLabel.Size = new System.Drawing.Size(47, 13);
+            this.SizeRightLabel.TabIndex = 6;
+            this.SizeRightLabel.Text = "Bigger:";
+            // 
+            // textBoxSizeRight
+            // 
+            this.textBoxSizeRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSizeRight.Location = new System.Drawing.Point(57, 238);
+            this.textBoxSizeRight.Name = "textBoxSizeRight";
+            this.textBoxSizeRight.ReadOnly = true;
+            this.textBoxSizeRight.Size = new System.Drawing.Size(238, 20);
+            this.textBoxSizeRight.TabIndex = 5;
+            // 
             // DeleteRight
             // 
             this.DeleteRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DeleteRight.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.DeleteRight.Location = new System.Drawing.Point(131, 343);
+            this.DeleteRight.Location = new System.Drawing.Point(135, 343);
             this.DeleteRight.Name = "DeleteRight";
             this.DeleteRight.Size = new System.Drawing.Size(75, 23);
             this.DeleteRight.TabIndex = 4;
@@ -132,7 +185,7 @@
             // 
             this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.buttonNext.Location = new System.Drawing.Point(212, 343);
+            this.buttonNext.Location = new System.Drawing.Point(216, 343);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(87, 23);
             this.buttonNext.TabIndex = 3;
@@ -146,7 +199,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextBoxRight.Location = new System.Drawing.Point(4, 211);
             this.TextBoxRight.Name = "TextBoxRight";
-            this.TextBoxRight.Size = new System.Drawing.Size(295, 20);
+            this.TextBoxRight.ReadOnly = true;
+            this.TextBoxRight.Size = new System.Drawing.Size(299, 20);
             this.TextBoxRight.TabIndex = 2;
             // 
             // pictureBoxRight
@@ -156,7 +210,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxRight.Location = new System.Drawing.Point(1, 3);
             this.pictureBoxRight.Name = "pictureBoxRight";
-            this.pictureBoxRight.Size = new System.Drawing.Size(298, 202);
+            this.pictureBoxRight.Size = new System.Drawing.Size(302, 202);
             this.pictureBoxRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxRight.TabIndex = 1;
             this.pictureBoxRight.TabStop = false;
@@ -200,5 +254,9 @@
         private System.Windows.Forms.Button DeleteRight;
         private System.Windows.Forms.Button buttonNext;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.Label SizeLeftLabel;
+        private System.Windows.Forms.TextBox textBoxSizeLeft;
+        private System.Windows.Forms.Label SizeRightLabel;
+        private System.Windows.Forms.TextBox textBoxSizeRight;
     }
 }
