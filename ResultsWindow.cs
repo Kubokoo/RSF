@@ -11,14 +11,13 @@ namespace RSF
 
         void ShowResults() //TODO USES TO MUCH RAM!!!!!!!
         {
-            if(RSF.repeatedImages.Count == 0)   //USED WHEN NO REPATED IMAGES ARE AVALIABLE
+            if (RSF.repeatedImages.Count == 0)   //USED WHEN NO REPATED IMAGES ARE AVALIABLE
             {
                 MessageBox.Show("There's no repeated images to show.");
                 return;
             }
 
             imageLoad(null,null);
-            
         }
 
         public ResultsWindow()

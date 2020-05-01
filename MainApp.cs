@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
@@ -12,6 +11,7 @@ namespace RSF
 {
     public partial class RSF : Form
     {
+
         bool minimalizedOnce = false;
         ResultsWindow newWindow;
         //public bool closeWindow
@@ -110,10 +110,10 @@ namespace RSF
                         }
                         else
                         {
-                            Images image = new Images(filename, extension, element, (int)length, Hash(element), false);
+                            Images image = new Images(filename, extension, element, (int)length);
                             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
-                            image.imageHash = imageHashing(image.path);
-                            comparing(image, -2);
+                            image.imageHash = image.imageHashing(image.path);
+                            comparing(image);
                         }
 
                     }
@@ -149,10 +149,10 @@ namespace RSF
 
                     if (CheckingIfIsImage(element))
                     {
-                        Images image = new Images(filename, extension, element, (int)length, Hash(element), false); //Images image = new Images(filename, extension, element, Hash(element));
+                        Images image = new Images(filename, extension, element, (int)length);
                         logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
-                        image.imageHash = imageHashing(image.path);
-                        comparing(image, -2);
+                        image.imageHash = image.imageHashing(image.path);
+                        comparing(image);
                     }
                     else
                     {
@@ -170,7 +170,7 @@ namespace RSF
         bool repetings = false;
 
         //COMPARING FOR IMAGES ONLY
-        bool comparing(Images image, int indexOnImageList)
+        bool comparing(Images image, int indexOnImageList = -2)
         {
             bool breakLoop = false;
             if (imagesList.Count == 0)
@@ -187,11 +187,11 @@ namespace RSF
                     {
                         if (k == indexOnImageList) return;
                         int comparability = 0;
-                        for (int i = 0; i < accuracy * accuracy; i++)
+                        for (int i = 0; i < Settings.Accuracy * Settings.Accuracy; i++)
                         {
                             if (image.imageHash[i] == imagesList[k].imageHash[i]) comparability++;
                         }
-                        comparability = (comparability / (accuracy * accuracy)) * 100;
+                        comparability = (comparability / (Settings.Accuracy * Settings.Accuracy)) * 100;
                         if (comparability > 90)
                         {
                             state.Break();
@@ -223,11 +223,11 @@ namespace RSF
                     {
                         if (j == indexOnImageList) continue;
                         int comparability = 0;
-                        for (int i = 0; i < accuracy * accuracy; i++)
+                        for (int i = 0; i < Settings.Accuracy * Settings.Accuracy; i++)
                         {
                             if (image.imageHash[i] == imagesList[j].imageHash[i]) comparability++;
                         }
-                        comparability = (comparability / (accuracy * accuracy)) * 100;
+                        comparability = (comparability / (Settings.Accuracy * Settings.Accuracy)) * 100;
                         if (comparability > 90)
                         {
                             if (repetings == false)
@@ -252,40 +252,6 @@ namespace RSF
         }
 
         List<Images> imagesList = new List<Images>();
-        int accuracy = 32;
-
-        //GETTING VALUES OF LIGHT AND DARK (FOR IMAGE COMPARING)
-        public bool[] imageHashing(string path)
-        {
-            bool[] b = new bool[accuracy * accuracy];
-            Bitmap bitmap = new Bitmap(Image.FromFile(path), new Size(accuracy, accuracy));
-
-            int k = 0;
-            for (int i = 0; i < bitmap.Height; i++)
-            {
-                for (int j = 0; j < bitmap.Width; j++)
-                {
-                    b[k] = (bitmap.GetPixel(i, j).GetBrightness() < 0.5f); //TODO całą tablicę byte[] zapisać jako string i porównywać czy takie same
-                    k++;
-                }
-            }
-
-            return b;
-        }
-
-        //GETING FILE HASH (FOR EASY FILE COMPARING)
-        public string Hash(string element)
-        {
-            var md5 = System.Security.Cryptography.MD5.Create();
-            int size = 10000;
-            byte[] streamByte = new byte[size];
-            FileStream fs = File.OpenRead(element);
-            fs.Read(streamByte, 0, size); //streamByte.Length
-            var hash = md5.ComputeHash(streamByte);
-            var hashFinal = BitConverter.ToString(hash).Replace("-", "").ToLower();
-            fs.Close();
-            return hashFinal;
-        }
 
         //CLENING GLOBAL VARIABLES FOR SECOND RUN
         public void cleaningVariables()
@@ -299,9 +265,9 @@ namespace RSF
         public RSF()
         {
             InitializeComponent();
+            Settings.Accuracy = 32;
+            Settings.JsonSaving = true;
         }
-
-        bool jsonSaving = true;
 
         private async void start_Click(object sender, EventArgs e)
         {
@@ -408,7 +374,7 @@ namespace RSF
                 }
                 
 
-                if (jsonSaving) //Checks if user wants to save json file
+                if (Settings.JsonSaving) //Checks if user wants to save json file
                 {
 
                     if (Directory.Exists("Json"))
@@ -465,10 +431,10 @@ namespace RSF
                     }
                     else
                     {
-                        Images image = new Images(filename, extension, element, (int)length, Hash(element), false);
+                        Images image = new Images(filename, extension, element, (int)length);
                         logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
-                        image.imageHash = imageHashing(image.path);
-                        if (comparing(image, -2))
+                        image.imageHash = image.imageHashing(image.path);
+                        if (comparing(image))
                         {
                             NewFileRepeated();
                         }
@@ -547,44 +513,5 @@ namespace RSF
             logBox.ScrollToCaret();
         }
 
-    }
-
-    public class Images
-    {
-        public string filename;
-        public string extension;
-        public string path;
-        public int size;
-        public string hash;
-        public bool[] imageHash;
-        public string repeatedWith;
-        public bool notFoundGUI;
-        public bool repeatedNotFoundGUI;
-
-        [JsonConstructor]
-        public Images(string _filename, string _extension, string _path, int _size, string _hash, bool _repeatedBigger)
-        {
-            filename = _filename;
-            extension = _extension;
-            path = _path;
-            size = _size;
-            hash = _hash;
-            repeatedBigger = _repeatedBigger;
-            notFoundGUI = false;
-            repeatedNotFoundGUI = false;
-        }
-
-        public Images(bool[] _imageHash)
-        {
-            imageHash = _imageHash;
-        }
-
-        public Images(string _repeatedWith)
-        {
-            repeatedWith = _repeatedWith;
-        }
-
-        public string repeatedWithPath {get;set;}
-        public bool repeatedBigger { get; set; }
     }
 }
