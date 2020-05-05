@@ -29,8 +29,13 @@ namespace RSF
         //    }
         //}
 
-        bool CheckingIfIsImage(string element)
+        bool CheckingIfIsImage(string element, string extension)
         {
+            if (extension == ".webp") //TODO Do proper check on webp
+            {
+                return true;
+            }
+
             byte[] streamByte = new byte[8];
             FileStream fs = File.OpenRead(element);
             fs.Read(streamByte, 0, 8);
@@ -89,7 +94,7 @@ namespace RSF
                 var extension = Path.GetExtension(element).ToLower();
                 var filename = Path.GetFileName(element);
                 filename = filename.Remove(filename.Length - extension.Length, extension.Length);
-                if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg")
+                if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg" || extension == ".webp")
                 {
 
                     //Checking if file is 0 Bytes
@@ -100,7 +105,7 @@ namespace RSF
                         continue;
                     }
 
-                    if (CheckingIfIsImage(element))
+                    if (CheckingIfIsImage(element, extension))
                     {
                         int indexOnImageList = imagesList.FindIndex(x => x.path.Contains(element));
                         if (indexOnImageList != -1) //Checking if Image is alredy at imagesList
@@ -112,7 +117,7 @@ namespace RSF
                         {
                             Images image = new Images(filename, extension, element, (int)length);
                             logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
-                            image.imageHash = image.imageHashing(image.path);
+                            image.imageHash = image.imageHashing(image.path, image.extension);
                             comparing(image);
                         }
 
@@ -137,7 +142,7 @@ namespace RSF
                 var extension = Path.GetExtension(element).ToLower();
                 var filename = Path.GetFileName(element);
                 filename = filename.Remove(filename.Length - extension.Length, extension.Length);
-                if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg")
+                if (extension == ".jpg" || extension == ".png" || extension == ".gif" || extension == ".jpeg" || extension == ".webp")
                 {
                     //Checking if file is 0 Bytes
                     long length = new FileInfo(element).Length;
@@ -147,11 +152,11 @@ namespace RSF
                         continue;
                     }
 
-                    if (CheckingIfIsImage(element))
+                    if (CheckingIfIsImage(element, extension))
                     {
                         Images image = new Images(filename, extension, element, (int)length);
                         logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
-                        image.imageHash = image.imageHashing(image.path);
+                        image.imageHash = image.imageHashing(image.path, image.extension);
                         comparing(image);
                     }
                     else
@@ -418,7 +423,7 @@ namespace RSF
                     return;
                 }
                 //TODO CHECK WHY TEST.zip BREAKS PROGRAM
-                if (CheckingIfIsImage(element))
+                if (CheckingIfIsImage(element, extension))
                 {
                     int indexOnImageList = imagesList.FindIndex(x => x.path.Contains(element));
                     if (indexOnImageList != -1) //Checks if Image is alredy at imagesList
@@ -433,7 +438,7 @@ namespace RSF
                     {
                         Images image = new Images(filename, extension, element, (int)length);
                         logBox.Invoke(new MethodInvoker(delegate { logBox.Text += "- " + filename + extension + " " + Environment.NewLine; }));
-                        image.imageHash = image.imageHashing(image.path);
+                        image.imageHash = image.imageHashing(image.path, image.extension);
                         if (comparing(image))
                         {
                             NewFileRepeated();

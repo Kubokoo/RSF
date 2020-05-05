@@ -44,17 +44,19 @@ namespace RSF
         public bool repeatedBigger { get; set; }
 
         
-        public bool[] imageHashing(string path) //GETTING VALUES OF LIGHT AND DARK (FOR IMAGE COMPARING)
+        public bool[] imageHashing(string path, string extension) //GETTING VALUES OF LIGHT AND DARK (FOR IMAGE COMPARING)
         {
             bool[] b = new bool[Settings.Accuracy * Settings.Accuracy];
-            Bitmap bitmap = new Bitmap(Image.FromFile(path), new Size(Settings.Accuracy, Settings.Accuracy));
+
+            Bitmap bitmap = Settings.loadBitmap(path, extension);
 
             int k = 0;
-            for (int i = 0; i < bitmap.Height; i++)
+            for (int i = 0; i < Settings.Accuracy; i++)
             {
-                for (int j = 0; j < bitmap.Width; j++)
+                for (int j = 0; j < Settings.Accuracy; j++)
                 {
                     b[k] = (bitmap.GetPixel(i, j).GetBrightness() < 0.5f); //TODO całą tablicę byte[] zapisać jako string i porównywać czy takie same
+                    //Console.WriteLine("i:" + i + ", j:" + j);
                     k++;
                 }
             }
