@@ -1,8 +1,4 @@
-﻿using System.Drawing;
-using ImageProcessor.Plugins.WebP.Imaging.Formats;
-using System.IO;
-
-namespace RSF
+﻿namespace RSF
 {
     public static class Settings
     {
@@ -33,23 +29,6 @@ namespace RSF
             {
                 jsonSaving = value;
             }
-        }
-
-        public static Bitmap loadBitmap (string path, string extension)
-        {
-            Bitmap bitmap;          
-
-            if (extension == ".webp")
-            {
-                WebPFormat webpDecoder = new WebPFormat();
-                bitmap = (Bitmap)webpDecoder.Load(File.Open(path, FileMode.Open));
-            }
-            else
-            {
-                bitmap = new Bitmap(Image.FromFile(path), new Size(Accuracy, Accuracy));
-            }
-
-            return bitmap;
         }
     }
 }

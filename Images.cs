@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System;
+using ImageProcessor.Plugins.WebP.Imaging.Formats;
 
 namespace RSF
 {
@@ -48,7 +49,7 @@ namespace RSF
         {
             bool[] b = new bool[Settings.Accuracy * Settings.Accuracy];
 
-            Bitmap bitmap = Settings.loadBitmap(path, extension);
+            Bitmap bitmap = loadBitmap(path, extension);
 
             int k = 0;
             for (int i = 0; i < Settings.Accuracy; i++)
@@ -76,6 +77,31 @@ namespace RSF
             var hashFinal = BitConverter.ToString(hash).Replace("-", "").ToLower();
             fs.Close();
             return hashFinal;
+        }
+
+        public static Bitmap loadBitmap(string path, string extension, int sizeX = -1, int sizeY = -1)
+        {
+            Bitmap bitmap;
+
+            if (extension == ".webp")
+            {
+                WebPFormat webpDecoder = new WebPFormat();
+                bitmap = (Bitmap)webpDecoder.Load(File.Open(path, FileMode.Open));
+            }
+
+            else
+            {
+                if (sizeX == -1 || sizeY == -1)
+                {
+                    bitmap = new Bitmap(Image.FromFile(path), new Size(Settings.Accuracy, Settings.Accuracy));
+                }
+                else
+                {
+                    bitmap = new Bitmap(Image.FromFile(path), new Size(sizeX, sizeY));
+                }
+            }
+
+            return bitmap;           
         }
     }
 }

@@ -9,7 +9,7 @@ namespace RSF
     {
         int i = 0;
 
-        void ShowResults() //TODO USES TO MUCH RAM!!!!!!!
+        void ShowResults()
         {
             if (RSF.repeatedImages.Count == 0)   //USED WHEN NO REPATED IMAGES ARE AVALIABLE
             {
@@ -17,7 +17,7 @@ namespace RSF
                 return;
             }
 
-            imageLoad(null,null);
+            imageLoad();
         }
 
         public ResultsWindow()
@@ -38,7 +38,7 @@ namespace RSF
             ShowResults();
         }
 
-        private void imageLoad(object sender, System.EventArgs e)
+        private void imageLoad(object sender = null, System.EventArgs e = null)
         {
             if (pictureBoxLeft.Image != null)
             {
@@ -60,7 +60,10 @@ namespace RSF
                 {
                     TextBoxLeft.Text = RSF.repeatedImages[i].filename.ToString() + RSF.repeatedImages[i].extension.ToString();  //TODO BITMAP CLASS HAS THUMBNAIL OPTION(using it intsted of normal image[what dimentions it has)
                     textBoxSizeLeft.Text = RSF.repeatedImages[i].size.ToString();
-                    pictureBoxLeft.Image = new Bitmap(Image.FromFile(RSF.repeatedImages[i].path), pictureBoxRight.Size); //TODO TRY DISPOSING IT OUTSIDE TRY
+                    pictureBoxLeft.Image = Images.loadBitmap(RSF.repeatedImages[i].path,
+                        RSF.repeatedImages[i].extension,
+                        pictureBoxLeft.Size.Width,
+                        pictureBoxLeft.Size.Height);
                 }
             }
             catch (IOException)
@@ -78,7 +81,10 @@ namespace RSF
                 {
                     TextBoxRight.Text = RSF.repeatedImages[i].repeatedWith.ToString();
                     textBoxSizeRight.Text = RSF.repeatedImages[i].repeatedBigger.ToString();
-                    pictureBoxRight.Image = new Bitmap(Image.FromFile(RSF.repeatedImages[i].repeatedWithPath), pictureBoxLeft.Size);
+                    pictureBoxRight.Image = Images.loadBitmap(RSF.repeatedImages[i].repeatedWithPath,
+                        RSF.repeatedImages[i].extension,
+                        pictureBoxRight.Size.Width,
+                        pictureBoxRight.Size.Height);
                 }
             }
             catch (IOException)
@@ -91,7 +97,7 @@ namespace RSF
         {
             int temp = i;
             i--;
-            imageLoad(null, null);
+            imageLoad();
             FileSystem.DeleteFile(RSF.repeatedImages[temp].path, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
         }
 
@@ -99,7 +105,7 @@ namespace RSF
         {
             int temp = i;
             i++;
-            imageLoad(null, null);
+            imageLoad();
             try
             {
                 FileSystem.DeleteFile(RSF.repeatedImages[temp].repeatedWithPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);

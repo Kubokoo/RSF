@@ -338,6 +338,7 @@ namespace RSF
                         logBox.Text += ex.ToString();
                     }
                 }
+
                 else
                 {
                     try
