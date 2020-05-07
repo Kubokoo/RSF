@@ -41,6 +41,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxDirectory = new System.Windows.Forms.RichTextBox();
             this.path = new System.Windows.Forms.Label();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.tableLayoutPanel2.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -219,6 +220,7 @@
         private System.Windows.Forms.RichTextBox textBoxDirectory;
         private System.Windows.Forms.Label path;
         private System.Windows.Forms.ToolStripMenuItem appToolStripMenuItem;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
 

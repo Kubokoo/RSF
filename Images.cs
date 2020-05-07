@@ -103,5 +103,39 @@ namespace RSF
 
             return bitmap;           
         }
+
+        public static bool CheckingIfIsImage(string element, string extension)
+        {
+            if (extension == ".webp") //TODO Do proper check on webp
+            {
+                return true;
+            }
+
+            byte[] streamByte = new byte[8];
+            FileStream fs = File.OpenRead(element);
+            fs.Read(streamByte, 0, 8);
+
+            if (streamByte[0] == 255 && streamByte[1] == 216 && streamByte[2] == 255)
+            {
+                return true; //its JPG image
+            }
+
+            if (streamByte[0] == 71 && streamByte[1] == 73
+                && streamByte[2] == 70 && streamByte[3] == 56
+                && (streamByte[4] == 57 || streamByte[4] == 55) && streamByte[5] == 97)
+            {
+                return true; //its GIF image
+            }
+
+            if (streamByte[0] == 137 && streamByte[1] == 80
+                && streamByte[2] == 78 && streamByte[3] == 71
+                && streamByte[4] == 13 && streamByte[5] == 10
+                && streamByte[6] == 26 && streamByte[7] == 10)
+            {
+                return true; //its PNG image
+            }
+
+            return false;
+        }
     }
 }
